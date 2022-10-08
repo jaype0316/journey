@@ -1,0 +1,38 @@
+.horizontal-scroll {
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.chapters-list {
+    padding: 2.5rem 2.5rem 1.5rem 2.5rem;
+    background-color: rgba(27, 31, 34, 0.85) !important;
+    border-radius: 1px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color:white;
+}
+
+p {
+    color: white;
+}
+
+.chapters-box {
+    z-index: 3;
+    background-color: rgba(44, 50, 55, 0.85);
+    border-radius: 1px;
+    // min-height:81%;
+    margin:15px;
+}
+
+ion-item{
+    --ion-item-background:transparent;
+ }
+
+ ion-list {
+    --ion-item-background: transparent;
+}
+
+ion-chip {
+    color:white;
+}

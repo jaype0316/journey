@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Daily Quote</ion-title>
+    <ion-buttons slot="end">
+      <app-authentication-button></app-authentication-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-progress-bar *ngIf="!loaded" type="indeterminate" style="margin-top:50%"></ion-progress-bar>
+  
+  <ion-grid style="height: 100%" *ngIf="loaded">
+    <ion-row justify-content-center align-items-center style="height: 100%">
+      <ion-card>
+        <img src="./assets/quote-book.jpg" />
+      <ion-card-header>
+        <ion-card-subtitle>daily quote</ion-card-subtitle>
+        <ion-card-title><blockquote>"{{quote.text}}"</blockquote></ion-card-title>
+       </ion-card-header>
+       <ion-card-content align="right">
+        <ion-note>- {{quote.author}}</ion-note>
+      </ion-card-content>
+      </ion-card>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

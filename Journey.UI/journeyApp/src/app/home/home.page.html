@@ -1,0 +1,89 @@
+
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="isEditMode" [disabled]="!isPageValid()" (click)="clickDone()">
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!isEditMode" (click)="clickEdit()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-button>
+      <!-- <app-login-button *ngIf="(auth.isAuthenticated$ | async) === false"></app-login-button>
+      <app-logout-button *ngIf="(auth.isAuthenticated$ | async)"></app-logout-button> -->
+      <app-authentication-button></app-authentication-button>
+    </ion-buttons>
+    <ion-title>Home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-progress-bar *ngIf="isLoading" type="indeterminate" style="margin-top:50%"></ion-progress-bar>
+  
+  <div class="home-background">
+    <!-- <div class="logo">
+      <p align="center"><ion-icon name="globe-outline"></ion-icon></p>
+    </div> -->
+    <ion-grid *ngIf="!isLoading" class="home-content">
+      <ion-row style="margin-top:25%">
+        <ion-col><div></div></ion-col>
+        <ion-col>
+          <!-- <div class="logo"><ion-icon name="globe-outline" size="large"></ion-icon></div> -->
+        </ion-col>
+        <ion-col><div></div></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <h1>
+            <span *ngIf="!isEditMode">{{book.title}}</span>
+            <ion-input *ngIf="isEditMode" [(ngModel)]="book.title" placeholder="title..."></ion-input>   
+          </h1>
+          <ion-textarea *ngIf="isEditMode" [(ngModel)]="book.about" placeholder="about..."></ion-textarea>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <p *ngIf="!isEditMode">
+            {{book.about}}
+          </p>
+        </ion-col>
+      </ion-row>
+      <ion-row style="text-align:center">
+        <ion-col size="12">
+          <ion-button (click)="clickNewEntry()">New Entry</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  
+
+  <!-- <ion-card *ngIf="!isLoading">
+   
+    <img *ngIf="book && book.logoKey" src="{{BUCKET_URI + book.logoKey}}" />
+    <img *ngIf="book && !book.logoKey" src="{{FALLBACK_COVER}}" />
+    <ion-item *ngIf="isEditMode">
+      <input  type="file" name="inputFile" accept="image/*" class="inputfile" (change)="onFileChange($event)" title="journey image" id="inputFile" />
+      <ion-spinner *ngIf="isChangingImage"></ion-spinner>
+    </ion-item>
+        
+    <ion-card-header>
+      <ion-card-subtitle>
+       
+      </ion-card-subtitle>
+      <ion-card-title>
+          <ion-input *ngIf="isEditMode" [(ngModel)]="book.title" placeholder="title..."></ion-input>       
+          <span *ngIf="!isEditMode">{{book.title}}</span>
+      </ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+        <ion-textarea *ngIf="isEditMode" [(ngModel)]="book.about" placeholder="about..."></ion-textarea>
+        <span *ngIf="!isEditMode">{{book.about}}</span>
+    </ion-card-content>
+  </ion-card> -->
+
+</ion-content>

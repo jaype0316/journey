@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Chapter <span *ngIf="loaded">{{chapter.sequence}}</span></ion-title>
+    <ion-chip slot="end" (click)="clickSave()" outline color="primary">
+      <ion-icon name="checkmark-circle"></ion-icon>
+      <ion-label>Save</ion-label>
+    </ion-chip>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding" scroll-y="false">
+
+  <ion-list *ngIf="!loaded">
+    <ion-list-header>
+      <ion-skeleton-text [animated]="true" style="width: 80px"></ion-skeleton-text>
+    </ion-list-header>
+    <ion-item>
+      <ion-thumbnail slot="start">
+        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+      </ion-thumbnail>
+      <ion-label>
+        <h3>
+          <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+        </h3>
+        <p>
+          <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+        </p>
+        <p>
+          <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div style="min-height: 98%; border-radius:1px;" id="chapter-entry" *ngIf="loaded">
+    <ion-item>
+      <ion-label position="stacked"><b>Title</b></ion-label>
+      <ion-input type="text" inputmode="text" [(ngModel)]="chapter.title"></ion-input>
+    </ion-item>
+
+      <ion-item>
+        <ion-select placeholder="Tags (optional)" [multiple]="true" (ionChange)="changeTags($event)">
+          <ion-select-option *ngFor="let tag of tags" [value]="tag">{{tag}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      
+      <div style="height:100%">
+        <ion-item>
+          <ion-label position="stacked"><b>Text</b></ion-label>
+          <ion-textarea id="msgInput" [(ngModel)]="chapter.body" type="text" [autoGrow]="true" placeholder="..." rows="19"></ion-textarea>
+        </ion-item>
+      </div>
+  </div>
+  
+</ion-content>
