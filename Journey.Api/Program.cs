@@ -2,6 +2,7 @@ using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.Runtime;
+using Amazon.S3;
 using Journey.Api.Middleware;
 using Journey.Api.Settings;
 using Journey.Core.Providers;
@@ -46,14 +47,13 @@ builder.Services.AddCors(c => c.AddPolicy("CorsPolicy", builder =>
     builder.AllowAnyMethod();
 }));
 
-var credentials = new BasicAWSCredentials("AKIAT75RS3OC2YEMZB7A", "fds5dTXcIMcDF7zupbcvZL6pQbSG1+w81+eZnK8A");
-var dynamoConfig = new AmazonDynamoDBConfig()
-{
-    RegionEndpoint = RegionEndpoint.USEast2
-};
-var dynamoDbClient = new AmazonDynamoDBClient(credentials, dynamoConfig);
+var aws = builder.Configuration.GetSection("AwsSettings").Get<AwsSettings>();
+var awsCreds = new BasicAWSCredentials(aws.AccessKey, aws.SecretKey);
 builder.Services.AddMediatR(typeof(Program), typeof(SaveChapterCommand));
-builder.Services.AddSingleton<IAmazonDynamoDB>(dynamoDbClient);
+builder.Services.AddSingleton<IAmazonDynamoDB, AmazonDynamoDBClient>(c =>
+{
+    return new AmazonDynamoDBClient(awsCreds, RegionEndpoint.USEast2);
+});
 builder.Services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
 builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
 builder.Services.AddHttpClient();
@@ -61,6 +61,10 @@ builder.Services.AddHttpClient();
 builder.Services.Configure<DatabaseSettings>(config.GetSection(DatabaseSettings.KeyName));
 builder.Services.AddScoped<IRepository, Journey.Repository.DynamoDb.Repository>();
 builder.Services.AddScoped<IReadRepository, InMemoryRepository>();
+builder.Services.AddSingleton<IAmazonS3, AmazonS3Client>(c =>
+{
+    return new AmazonS3Client(awsCreds, RegionEndpoint.USEast2);
+});
 builder.Services.AddScoped<IBlobStorageService, AwsBlobStorage>();
 builder.Services.AddScoped <IBlobKeyProvider, BlobObjectKeyProvider>();
 builder.Services.AddScoped<IZenQuoteClientHandler, ZenQuoteClientHandler>();
