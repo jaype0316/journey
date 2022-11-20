@@ -17,16 +17,32 @@ export class NewChapterPage implements OnInit {
   isBusy:boolean = false;
   //todo: move out of here
   tags = ['Perseverance', 'Resiliency', 'Commitment', 'Sacrifice'];
+  soundtracks = [];
+  currentSoundtrack:any;
+  audioActive:boolean = false;
+  audio = new Audio();
 
-  constructor(private storage: StorageService, private http:HttpClient, private toastr: ToastController, private router:Router) { }
+  constructor(private storage: StorageService, private http:HttpClient, private toastr: 
+    ToastController, private router:Router) { }
 
   ngOnInit() {
     this.chapter = new Chapter();
+    this.getSoundtracks();
   }
 
   changeTags($event){
     console.log('tags == ', $event.detail.value);
     this.chapter.tags = $event.detail.value;
+  }
+
+  async getSoundtracks(){
+    this.http.get(environment.journeyApi + "soundtrack/download").subscribe((soundtracks:any[]) => {
+        this.soundtracks = soundtracks.map((uri, index) => {
+          return {uri:uri, index:index};
+        });
+        console.log('soundtracks == ', this.soundtracks);
+        this.randomizeNextSoundtrack();
+    });
   }
 
   async clickSaveAndFinish() {
@@ -60,5 +76,54 @@ export class NewChapterPage implements OnInit {
     });
     toast.present();
   }
+
+  private randomizeNextSoundtrack(): any {
+    const randomIndex = Math.floor(Math.random() * this.soundtracks.length);
+    return this.soundtracks[randomIndex];
+    // let nextSoundtrack = this.soundtracks[randomIndex];
+    // return nextSoundtrack
+    // this.currentSoundtrack = this.media.create(nextSoundtrackUri);
+
+    // this.currentSoundtrack.onStatusUpdate.subscribe(status => console.log('sound player status == ', status));
+    // this.currentSoundtrack.onSuccess.subscribe(() => {'sound player on success'});
+    // this.currentSoundtrack.onError.subscribe(error => console.log('Error!', error)); 
+  }
+
+  clickPlay(){
+    console.log('click play');
+    this.audioActive = !this.audioActive;
+    if(!this.audioActive){
+      this.audio.pause();
+    } else {
+      this.play();
+    }
+    //this.audioPlayer.play(this.randomizeNextSoundtrack());
+    //this.currentSoundtrack.play();
+  }
+
+  private play(){
+    this.currentSoundtrack = this.currentSoundtrack || this.randomizeNextSoundtrack();
+        
+    this.audio.src = this.currentSoundtrack.uri;
+    this.audio.load();
+    this.audio.play();
+  }
+
+  clickShuffle($event){
+    this.currentSoundtrack = this.randomizeNextSoundtrack();
+    this.audioActive = !this.audioActive;
+    this.play();
+  }
+
+  pause(){
+    //this.currentSoundtrack.pause();
+    //this.audioPlayer.pause();
+  }
+
+  stop(){
+    //this.currentSoundtrack.stop();
+  }
+
+
 
 }

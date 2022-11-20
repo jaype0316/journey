@@ -36,7 +36,7 @@
         <ion-list-header><h3>Recent</h3></ion-list-header>
         <ion-item *ngFor="let chapter of pagedChapters | slice:0:3" (click)="clickGoToChapter(chapter)">
           <ion-avatar slot="start">
-            <img src="./assets/gohan awakening.jpg">
+            <img src="./assets/journal-chapter3.jpg">
           </ion-avatar>
           <ion-label>
             <h2>{{chapter.title}}</h2>
@@ -50,7 +50,7 @@
         <ion-list-header><h3>All</h3></ion-list-header>
         <ion-item *ngFor="let chapter of pagedChapters | slice:3" (click)="clickGoToChapter(chapter)">
           <ion-avatar slot="start">
-            <img src="./assets/gohan awakening.jpg">
+            <img src="./assets/journal-chapter3.jpg">
           </ion-avatar>
           <ion-label>
             <h2>{{chapter.title}}</h2>

@@ -1,0 +1,6 @@
+{
+	"appId": "com.iter-meum",
+	"appName": "itermeum",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

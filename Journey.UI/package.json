@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@capacitor/android": "^4.4.0",
+    "@capacitor/app": "^4.1.0",
+    "@capacitor/browser": "^4.0.1",
+    "@ionic/storage-angular": "^3.0.6"
+  }
+}

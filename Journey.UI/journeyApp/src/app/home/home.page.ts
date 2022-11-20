@@ -6,6 +6,8 @@ import { ToastController } from '@ionic/angular';
 import { AuthService } from '@auth0/auth0-angular';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { Browser } from '@capacitor/browser';
+import { mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -32,9 +34,14 @@ export class HomePage implements OnInit {
     this.isLoading = true;
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       if(!isAuthenticated) {
-        this.auth.loginWithRedirect({appState:{
-          target:window.top.location.pathname
-        }});
+        this.auth
+          .buildAuthorizeUrl()
+          .pipe(mergeMap((url) => Browser.open({ url, windowName: '_self' })))
+          .subscribe();
+
+        // this.auth.loginWithRedirect({appState:{
+        //   target:window.top.location.pathname
+        // }});
         return;
       }
 

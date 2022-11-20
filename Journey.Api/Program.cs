@@ -3,6 +3,7 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.Runtime;
 using Amazon.S3;
+using Journey.Api.Identity;
 using Journey.Api.Middleware;
 using Journey.Api.Settings;
 using Journey.Core.Providers;
@@ -14,6 +15,8 @@ using Journey.Core.Utilities;
 using Journey.Repository.Memory;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
@@ -63,7 +66,7 @@ builder.Services.AddScoped<IRepository, Journey.Repository.DynamoDb.Repository>(
 builder.Services.AddScoped<IReadRepository, InMemoryRepository>();
 builder.Services.AddSingleton<IAmazonS3, AmazonS3Client>(c =>
 {
-    return new AmazonS3Client(awsCreds, RegionEndpoint.USEast2);
+    return new AmazonS3Client(awsCreds, RegionEndpoint.USEast1);
 });
 builder.Services.AddScoped<IBlobStorageService, AwsBlobStorage>();
 builder.Services.AddScoped <IBlobKeyProvider, BlobObjectKeyProvider>();
@@ -73,7 +76,15 @@ builder.Services.AddScoped<IQuoteProvider, RandomQuoteProvider>();
 builder.Services.AddScoped<IIndexedRepository, Journey.Repository.DynamoDb.IndexedRepository>();
 builder.Services.AddAutoMapper(typeof(SaveChapterCommand), typeof(Program));
 builder.Services.AddScoped<IEntityKeyProvider, DefaultEntityKeyProvider>();
+builder.Services.AddScoped<IBlobUriResolver, AwsBlobUriResolver>();
 builder.Services.AddMemoryCache();
+
+//Identity
+//builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(config.GetConnectionString("Identity")));
+
+//builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+//                .AddEntityFrameworkStores<AppIdentityDbContext>();
+
 //JWT Auth
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(options =>

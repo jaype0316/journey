@@ -10,6 +10,8 @@ import { CommonModule } from '@angular/common';
 import { AuthModule, AuthHttpInterceptor } from '@auth0/auth0-angular';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+const redirectUri = 'com.iter-meum://dev-2mb38pu2.us.auth0.com/capacitor/com.iter-meum/callback';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -20,8 +22,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
     HttpClientModule,
     AuthModule.forRoot({
       domain:'dev-2mb38pu2.us.auth0.com',
-      clientId:'XaJDsh1K9YUMMBTDE0UFtQLYAj86v6nN',
-      redirectUri:'http://localhost:8101/tabs/home', //window.location.origin
+      clientId: 'XaJDsh1K9YUMMBTDE0UFtQLYAj86v6nN',//'XaJDsh1K9YUMMBTDE0UFtQLYAj86v6nN',
+      redirectUri: redirectUri, //'http://localhost:8101/tabs/home', //window.location.origin
       audience:"https://beyourhero.journey.com/api",
       //scope:'read:current_user',
       httpInterceptor:{
@@ -35,18 +37,13 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
             //   // The attached token should have these scopes
             //   scope: 'read:current_user'
             // }
+          },
+          {
+            uri: 'http://iter-meum.com/api/*'
           }
         ]
       }
   })],
-  // providers: [{ 
-  //   provide: RouteReuseStrategy, 
-  //   useClass: IonicRouteStrategy 
-  // },{
-  //   provide:HTTP_INTERCEPTORS,
-  //   useClass:AuthHttpInterceptor,
-  //   multi:true
-  // }],
   providers: [{
     provide:HTTP_INTERCEPTORS,
     useClass:AuthHttpInterceptor,

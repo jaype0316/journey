@@ -13,7 +13,18 @@
 
 <ion-content [fullscreen]="true" class="ion-padding" scroll-y="false">
   
-  <div style="min-height: 98%; border-radius:1px;" id="chapter-entry">
+  <ion-fab horizontal="end" vertical="center" slot="fixed" activated="audioActive">
+    <ion-fab-button color="danger" (click)="clickPlay()" close-icon="caret-forward">
+      <ion-icon name="stop"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list>
+      <ion-fab-button (click)="clickShuffle($event)">
+        <ion-icon name="shuffle"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <div style="border-radius:1px;" id="chapter-entry">
     <ion-item>
       <ion-label position="stacked"><b>Title</b></ion-label>
       <ion-input type="text" inputmode="text" [(ngModel)]="chapter.title"></ion-input>
@@ -26,15 +37,21 @@
         </ion-select>
       </ion-item>
       
-      <div style="height:100%">
+      <div>
         <ion-item>
           <ion-label position="stacked"><b>Text</b></ion-label>
-          <ion-textarea id="msgInput" [(ngModel)]="chapter.body" type="text" [autoGrow]="true" placeholder="..." rows="19"></ion-textarea>
+          <ion-textarea id="msgInput" [(ngModel)]="chapter.body" type="text" [autoGrow]="true" placeholder="..." rows="18"></ion-textarea>
         </ion-item>
       </div>
     
-
   </div>
+
+  <!-- <ion-footer>
+  <ion-toolbar>
+      <audio controls style="width:100%" src="https://soundtracks.s3.us-east-1.amazonaws.com/chapter%20two.mp3">
+      </audio>
+    </ion-toolbar>
+  </ion-footer> -->
 
   
 </ion-content>

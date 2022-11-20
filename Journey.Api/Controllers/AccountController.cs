@@ -28,6 +28,7 @@ namespace Journey.Api.Controllers
             this._blobObjectKeyProvider = keyProvider;
         }
 
+
         [HttpGet, Route("AssertUser")]
         public async Task<Journey.Models.User> AssertUserExists()
         {
@@ -35,6 +36,12 @@ namespace Journey.Api.Controllers
             var assertedUser = await _mediator.Send(new GetOrAddRequest(user.UserId, user.Email));
             return assertedUser;
             //return await _mediator.Send(new GetBookRequest() { UserId = _userId});
+        }
+
+        [HttpPost]
+        public async Task Register()
+        {
+
         }
 
         [HttpGet, Route("Bootstrap")]

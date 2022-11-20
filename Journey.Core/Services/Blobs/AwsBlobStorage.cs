@@ -15,9 +15,12 @@ namespace Journey.Core.Services.Blobs
     {
         private const string BUCKET_NAME = "journey-logos"; //todo: move this to config
         readonly IAmazonS3 _client;
-        public AwsBlobStorage(IAmazonS3 client)
+        private readonly IBlobUriResolver _blobUriResolver;
+
+        public AwsBlobStorage(IAmazonS3 client, IBlobUriResolver blobUriResolver)
         {
             _client = client;
+            _blobUriResolver = blobUriResolver;
         }
         public async Task<bool> Add(string key, IFormFile file)
         {
@@ -48,6 +51,26 @@ namespace Journey.Core.Services.Blobs
             var response = await _client.GetObjectAsync(BUCKET_NAME, key);
             return (response.ResponseStream, response.Headers.ContentType);
 
+        }
+
+        public async Task<IEnumerable<string>> GetList(string bucketName, string startAfter, int take)
+        {
+            var request = new ListObjectsV2Request()
+            {
+                BucketName = bucketName,
+                MaxKeys = take,
+                StartAfter = startAfter
+            };
+            var blobs = await _client.ListObjectsV2Async(request);
+            
+            var blobUris = new List<string>(blobs.KeyCount);
+            foreach(var blob in blobs.S3Objects)
+            {
+                var blobUri = _blobUriResolver.Resolve(bucketName, _client.Config.RegionEndpoint.OriginalSystemName, blob.Key);
+                blobUris.Add(blobUri);
+            }
+
+            return blobUris;
         }
     }
 }
