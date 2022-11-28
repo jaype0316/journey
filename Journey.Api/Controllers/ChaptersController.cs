@@ -27,7 +27,7 @@ namespace Journey.Api.Controllers
         }
 
         [HttpGet, Route("get/{pk}")]
-        public async Task<Models.DTO.Chapter> Get(string pk)
+        public async Task<Journey.Models.DTO.Chapter> Get(string pk)
         {
             var user = GetLoggedInUser();
             return await _mediator.Send(new GetById(pk, user.UserId));

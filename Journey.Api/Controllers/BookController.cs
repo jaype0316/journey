@@ -23,7 +23,7 @@ namespace Journey.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<Models.DTO.Book> Get()
+        public async Task<Journey.Models.DTO.Book> Get()
         {
             //var email = User.Identity.Name;
             var user = GetLoggedInUser();

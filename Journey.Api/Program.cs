@@ -5,6 +5,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Journey.Api.Identity;
 using Journey.Api.Middleware;
+using Journey.Api.Models;
 using Journey.Api.Settings;
 using Journey.Core.Providers;
 using Journey.Core.Repository;
@@ -14,12 +15,15 @@ using Journey.Core.Services.Quote;
 using Journey.Core.Utilities;
 using Journey.Repository.Memory;
 using MediatR;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -80,7 +84,9 @@ builder.Services.AddScoped<IBlobUriResolver, AwsBlobUriResolver>();
 builder.Services.AddMemoryCache();
 
 //Identity
-//builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(config.GetConnectionString("Identity")));
+var identityCnn = config.GetConnectionString("Identity");
+builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(identityCnn));
+builder.Services.AddIdentity<AppUser, Microsoft.AspNetCore.Identity.IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
 
 //builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
 //                .AddEntityFrameworkStores<AppIdentityDbContext>();
@@ -93,8 +99,16 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    options.Authority = "https://dev-2mb38pu2.us.auth0.com/";
-    options.Audience = "https://beyourhero.journey.com/api";
+    options.Authority = builder.Environment.EnvironmentName == "Production" ? "https://dev-2mb38pu2.us.auth0.com/" : "https://localhost:5001";
+    options.Audience = builder.Environment.EnvironmentName == "Production" ? "https://beyourhero.journey.com/api" : "https://localhost:5001";
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("SigningKey").Value))
+    };
 });
 
 

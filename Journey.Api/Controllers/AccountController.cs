@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Journey.Api.Models;
 using Journey.Core.Providers;
 using Journey.Core.Repository;
 using Journey.Core.Services.Blobs;
@@ -8,8 +9,13 @@ using Journey.Core.Services.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using System.Web;
 
 namespace Journey.Api.Controllers
@@ -21,11 +27,16 @@ namespace Journey.Api.Controllers
     {
         private readonly IBlobStorageService _blobStorage;
         private readonly IBlobKeyProvider _blobObjectKeyProvider;
+        readonly IConfiguration _config;
+        readonly UserManager<AppUser> _userManager;
 
-        public AccountController(IMediator mediator, IBlobStorageService blobStorage, IBlobKeyProvider keyProvider, IMapper mapper) :base(mediator, mapper)
+        public AccountController(IMediator mediator, IBlobStorageService blobStorage, IBlobKeyProvider keyProvider, 
+                                IMapper mapper, IConfiguration config, UserManager<AppUser> userManager) :base(mediator, mapper)
         {
             this._blobStorage = blobStorage;
             this._blobObjectKeyProvider = keyProvider;
+            this._config = config;
+            this._userManager = userManager;
         }
 
 
@@ -38,10 +49,56 @@ namespace Journey.Api.Controllers
             //return await _mediator.Send(new GetBookRequest() { UserId = _userId});
         }
 
-        [HttpPost]
-        public async Task Register()
+        public async Task<IActionResult> Register(User user)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            var appUser = new AppUser()
+            {
+                UserName = user.Name,
+                Email = user.Email
+            };
+
+            var result = await _userManager.CreateAsync(appUser, user.Password);
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error.Description);
+            }
+
+            return Ok(ModelState);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Authenticate([FromBody] UserRegistration user)
+        {
+            if (user == null)
+                return BadRequest();
+
+            //temp
+            if(user.Email == "jaype0316@gmail.com" && user.Password == "colombia2")
+            {
+                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._config.GetSection("SigningKey").Value));
+                var creds  = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                var token = new JwtSecurityToken(
+                    issuer: "", 
+                    audience: "", 
+                    claims: new List<Claim>(), 
+                    expires: DateTime.UtcNow.AddMinutes(60), 
+                    signingCredentials: creds
+                );
+
+                var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+                return Ok(new { Token = jwt });
+            }
+
+            return Unauthorized();
         }
 
         [HttpGet, Route("Bootstrap")]
