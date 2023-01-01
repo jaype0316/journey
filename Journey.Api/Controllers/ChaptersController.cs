@@ -37,6 +37,7 @@ namespace Journey.Api.Controllers
         public async Task<IActionResult> Save(SaveChapterCommand command)
         {
             var user = GetLoggedInUser();
+
             command.UserId = user.UserId;
             
             var chapterId = await _mediator.Send(command);

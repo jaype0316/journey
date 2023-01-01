@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Journey.Api.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,7 +23,8 @@ namespace Journey.Api.Controllers
     
         protected (string? UserId, string? Email) GetLoggedInUser()
         {
-            var id = User?.Claims?.FirstOrDefault(c => c.Type == "sub")?.Value;
+            //todo: move these magic strings
+            var id = User?.Claims?.FirstOrDefault(c => c.Type == "Id")?.Value;
             var email = User?.Claims?.FirstOrDefault(c => c.Type == "email")?.Value;
             return (id, email);
         }

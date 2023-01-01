@@ -40,33 +40,44 @@
   <ion-grid *ngIf="!loading.chapter && swiper && currentChapter">
     <ion-row>
       <ion-col>
-        <ion-label><b>tags:</b> </ion-label>
-        <ion-chip *ngFor="let tag of currentChapter.tags; trackBy: trackTag">{{tag}}</ion-chip>
+        <ion-segment [scrollable]="true">
+            <ion-segment-button *ngFor="let tag of currentChapter.tags; trackBy: trackTag">
+              <ion-label>{{tag}}</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+        <!-- <ion-chip *ngFor="let tag of currentChapter.tags; trackBy: trackTag">{{tag}}</ion-chip> -->
       </ion-col>
     </ion-row>
   </ion-grid>
 
-    <swiper 
-    *ngIf="!loading.chapter"
-    #swiper 
-    (slideChange)="slideChange($event)"
-    [slidesPerView]="1"
-    [spaceBetween]="30"
-    [pagination]="{
-      clickable: true
-    }"
-    [navigation]="true"
-    class="mySwiper">
-
-    <ng-template swiperSlide *ngFor="let chapter of chapters; index as i">     
-      <div *ngIf="!loading.currentChapter && currentChapter">
-        <div *ngIf="!loading.currentChapter && currentChapter != null">
-            <div><h2>{{chapter.title}}</h2></div>
-            <div>{{chapter.body}}</div>
+  <ion-grid [fixed]="true" class="chapter-grid">
+    <ion-row class="full-vertical">
+      <ion-col size="12" class="full-vertical">
+        <swiper 
+          *ngIf="!loading.chapter"
+          #swiper 
+          (slideChange)="slideChange($event)"
+          [slidesPerView]="1"
+          [spaceBetween]="30"
+          [pagination]="{
+            clickable: true
+          }"
+          [navigation]="true"
+          [scrollbar]="true"
+          class="mySwiper">
+    
+        <ng-template swiperSlide *ngFor="let chapter of chapters; index as i">     
+          <div *ngIf="!loading.currentChapter && currentChapter" style="overflow:scroll">
+            <div *ngIf="!loading.currentChapter && currentChapter != null">
+                <div><h2>{{chapter.title}}</h2></div>
+                <div>{{chapter.body}}</div>
+              </div>
           </div>
-      </div>
-    </ng-template>  
-  </swiper>
+        </ng-template>  
 
+        </swiper>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 </ion-content>

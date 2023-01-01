@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-login',
@@ -8,15 +7,15 @@ import { AuthService } from '@auth0/auth0-angular';
 })
 export class LoginPage implements OnInit {
 
-  constructor(private auth: AuthService) { }
+  constructor() { }
 
   ngOnInit() {
   }
 
-  loginWithRedirect(): void {
-    this.auth.loginWithRedirect({appState:{
-      target:window.top.location.pathname
-    }});
-  }
+  // loginWithRedirect(): void {
+  //   this.auth.loginWithRedirect({appState:{
+  //     target:window.top.location.pathname
+  //   }});
+  // }
 
 }

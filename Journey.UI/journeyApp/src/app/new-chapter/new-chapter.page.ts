@@ -56,7 +56,7 @@ export class NewChapterPage implements OnInit {
         this.showToast('Saved');
         this.router.navigate(['tabs/chapters']);
     }, (error:any) =>{
-      this.showToast('Error saving');
+     // this.showToast('Error saving');
     }, () => {this.isBusy = false;});
   }
 

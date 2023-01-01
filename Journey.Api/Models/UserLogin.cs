@@ -13,6 +13,7 @@ namespace Journey.Api.Models
     public class UserRegistration
     {
         [Required]
+        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "E-mail is not valid")]
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
@@ -20,20 +21,19 @@ namespace Journey.Api.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class User
-    {
-        [Required]
-        public string Name { get; set; }
-        [Required]
-        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "E-mail is not valid")]
-        public string  Email { get; set; }
-        [Required]
+    public class UserLogin 
+    { 
+        public string Email { get; set; }
         public string Password { get; set; }
+        public string? ReturnUrl { get; set; }
     }
+
 
     public class AppUser : IdentityUser
     {
-
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? AvatarUrl { get; set; }
     }
 
     public class AppIdentityDbContext : IdentityDbContext<AppUser>
@@ -41,6 +41,15 @@ namespace Journey.Api.Models
         public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options) : base(options)
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<AppUser>().Property(x => x.FirstName).HasMaxLength(100);
+            builder.Entity<AppUser>().Property(x => x.LastName).HasMaxLength(100);
+            builder.Entity<AppUser>().Property(x => x.AvatarUrl);
         }
     }
 }

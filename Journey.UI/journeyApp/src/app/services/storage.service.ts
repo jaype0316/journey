@@ -17,4 +17,8 @@ export class StorageService {
     return JSON.parse(value) || null;
   }
 
+  remove(key:string){
+    window.localStorage.removeItem(key);
+  }
+
 }

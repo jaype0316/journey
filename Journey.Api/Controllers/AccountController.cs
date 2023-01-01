@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Journey.Api.Auth;
 using Journey.Api.Models;
+using Journey.Api.ViewModels;
 using Journey.Core.Providers;
 using Journey.Core.Repository;
 using Journey.Core.Services.Blobs;
@@ -29,14 +31,19 @@ namespace Journey.Api.Controllers
         private readonly IBlobKeyProvider _blobObjectKeyProvider;
         readonly IConfiguration _config;
         readonly UserManager<AppUser> _userManager;
+        readonly SignInManager<AppUser> _signInManager;
+        private readonly IApiAuthenticationTokenProvider _tokenProvider;
 
         public AccountController(IMediator mediator, IBlobStorageService blobStorage, IBlobKeyProvider keyProvider, 
-                                IMapper mapper, IConfiguration config, UserManager<AppUser> userManager) :base(mediator, mapper)
+                                IMapper mapper, IConfiguration config, UserManager<AppUser> userManager, 
+                                SignInManager<AppUser> signInManager, IApiAuthenticationTokenProvider tokenProvider) :base(mediator, mapper)
         {
             this._blobStorage = blobStorage;
             this._blobObjectKeyProvider = keyProvider;
             this._config = config;
             this._userManager = userManager;
+            this._signInManager = signInManager;
+            this._tokenProvider = tokenProvider;
         }
 
 
@@ -49,14 +56,16 @@ namespace Journey.Api.Controllers
             //return await _mediator.Send(new GetBookRequest() { UserId = _userId});
         }
 
-        public async Task<IActionResult> Register(User user)
+        [HttpPost, Route("Register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(UserRegistration user)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var appUser = new AppUser()
             {
-                UserName = user.Name,
+                UserName = user.Email,
                 Email = user.Email
             };
 
@@ -74,31 +83,54 @@ namespace Journey.Api.Controllers
             return Ok(ModelState);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Authenticate([FromBody] UserRegistration user)
+        [HttpPost, Route("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(UserLogin login)
         {
-            if (user == null)
+            if (!ModelState.IsValid)
                 return BadRequest();
 
-            //temp
-            if(user.Email == "jaype0316@gmail.com" && user.Password == "colombia2")
+            var user = await _userManager.FindByEmailAsync(login.Email);
+
+            if (user == null)
             {
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._config.GetSection("SigningKey").Value));
-                var creds  = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-                var token = new JwtSecurityToken(
-                    issuer: "", 
-                    audience: "", 
-                    claims: new List<Claim>(), 
-                    expires: DateTime.UtcNow.AddMinutes(60), 
-                    signingCredentials: creds
-                );
-
-                var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-                return Ok(new { Token = jwt });
+                ModelState.AddModelError(nameof(login.Email), "Login Failed: Invalid Email or password");
+                return BadRequest(ModelState);
+            }
+            
+            await _signInManager.SignOutAsync();
+            var signInResult = await _signInManager.PasswordSignInAsync(user, login.Password, false, false);
+            if (!signInResult.Succeeded)
+            {
+                ModelState.AddModelError(nameof(login.Email), "Login Failed: Invalid Email or password");
+                return BadRequest(ModelState);
             }
 
-            return Unauthorized();
+            
+            var token = _tokenProvider.Provide(user);
+
+            //login successful
+            //create jwt and return it
+            return Ok(new { token = token });
+
+        }
+
+        [HttpGet, Route("UserProfile")]
+        public async Task<IActionResult> GetUserProfile()
+        {
+            var user = GetLoggedInUser();
+            var appUser = await _userManager.FindByEmailAsync(user.Email);
+            var userProfile = _mapper.Map<UserProfile>(appUser);
+
+            return new JsonResult(userProfile);
+        }
+
+        [HttpPost, Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            
+            return Ok();
         }
 
         [HttpGet, Route("Bootstrap")]

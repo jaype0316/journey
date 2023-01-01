@@ -24,26 +24,28 @@
     </ion-fab-list>
   </ion-fab>
 
-  <div style="border-radius:1px;" id="chapter-entry">
-    <ion-item>
-      <ion-label position="stacked"><b>Title</b></ion-label>
-      <ion-input type="text" inputmode="text" [(ngModel)]="chapter.title"></ion-input>
-    </ion-item>
-  
-
-      <ion-item>
-        <ion-select placeholder="Tags (optional)" [multiple]="true" (ionChange)="changeTags($event)">
-          <ion-select-option *ngFor="let tag of tags" [value]="tag">{{tag}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      
-      <div>
-        <ion-item>
-          <ion-label position="stacked"><b>Text</b></ion-label>
-          <ion-textarea id="msgInput" [(ngModel)]="chapter.body" type="text" [autoGrow]="true" placeholder="..." rows="18"></ion-textarea>
-        </ion-item>
-      </div>
-    
+  <div class="chapter-entry-box">
+    <ion-grid [fixed]="true">
+      <ion-row>
+        <ion-col size="12">
+          <ion-label position="stacked" color="black"><b>Title</b></ion-label>
+          <ion-input type="text" inputmode="text" [(ngModel)]="chapter.title" placeholder="..."></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <ion-select placeholder="Tags (optional)" [multiple]="true" (ionChange)="changeTags($event)">
+            <ion-select-option *ngFor="let tag of tags" [value]="tag">{{tag}}</ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <ion-label position="stacked" color="black"><b>Text</b></ion-label>
+          <ion-textarea style="width:100%; height:50vh;" id="msgInput" rows="15" [(ngModel)]="chapter.body" type="text"  placeholder="..."></ion-textarea>
+        </ion-col>
+      </ion-row>
+    </ion-grid>    
   </div>
 
   <!-- <ion-footer>

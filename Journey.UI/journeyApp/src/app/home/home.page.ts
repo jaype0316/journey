@@ -3,7 +3,6 @@ import { Book } from '../models/book';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ToastController } from '@ionic/angular';
-import { AuthService } from '@auth0/auth0-angular';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Browser } from '@capacitor/browser';
@@ -26,35 +25,15 @@ export class HomePage implements OnInit {
   BUCKET_URI: string = 'https://journey-logos.s3.us-east-2.amazonaws.com/';
   FALLBACK_COVER:string = 'https://journey-logos.s3.us-east-2.amazonaws.com/fallback-cover.jpg';
   
-  constructor(private http:HttpClient, private toastr: ToastController, public auth: AuthService, private router:Router) { 
+  constructor(private http:HttpClient, private toastr: ToastController, private router:Router) { 
   }
 
   ngOnInit() {
     //re-direct user to login if not authenticated
     this.isLoading = true;
-    this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
-      if(!isAuthenticated) {
-        this.auth
-          .buildAuthorizeUrl()
-          .pipe(mergeMap((url) => Browser.open({ url, windowName: '_self' })))
-          .subscribe();
-
-        // this.auth.loginWithRedirect({appState:{
-        //   target:window.top.location.pathname
-        // }});
-        return;
-      }
-
-    this.auth.user$.subscribe(
-      (profile) => {
-        this.profile = profile;
-      });
-
-      this.bootstrap().subscribe((book) => {
-        this.book = book;
-      },(err) =>{}, () => {this.isLoading = false;}); 
-
-    });
+    this.bootstrap().subscribe((book) => {
+      this.book = book;
+    },(err) =>{}, () => {this.isLoading = false;}); 
   }
 
   isPageValid(){

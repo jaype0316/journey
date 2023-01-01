@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '@auth0/auth0-angular';
+import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-authentication-button',
@@ -8,14 +9,17 @@ import { AuthService } from '@auth0/auth0-angular';
 })
 export class AuthenticationButtonComponent implements OnInit {
 
-  constructor(public auth: AuthService) { }
+  constructor(public auth:AuthenticationService, private router: Router) { }
 
   ngOnInit() {}
 
-  logout(): void {
-    this.auth.logout({
-      returnTo:'http://localhost:8101/'
+  clickLogout(): void {
+    this.auth.logout().subscribe(c =>{
+      this.router.navigate(['authenticate']);
     });
+    // this.auth.logout({
+    //   returnTo:'http://localhost:8101/'
+    // });
   }
 
 }

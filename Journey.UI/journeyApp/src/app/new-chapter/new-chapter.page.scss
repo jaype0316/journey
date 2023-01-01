@@ -13,4 +13,27 @@ ion-label {
 color:white;
 }
 
+// #chapter-entry {
+//   // margin:10px auto;
+//   // width:90%;
+//   // height:90%;
+//   // display:flex;
+//   // flex-direction: column;
+//   // align-items:center
+// }
+
+#chapter-entry > ion-item {
+  width:100%;
+}
+
+.chapter-entry-box {
+  background-color:white;
+  color:black;
+}
+
+.chapter-entry-box > ion-label {
+  color:black;
+}
+
+
 

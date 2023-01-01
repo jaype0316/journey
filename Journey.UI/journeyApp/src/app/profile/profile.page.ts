@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { AuthService } from '@auth0/auth0-angular';
+import { BooleanValueAccessor } from '@ionic/angular';
+import { environment } from 'src/environments/environment';
 import { StorageService } from '../services/storage.service';
 
 @Component({
@@ -12,19 +14,25 @@ export class ProfilePage implements OnInit {
   defaultTheme:string = 'light';
   profile:any;
   profileJson: string = null;
-  constructor(private storage: StorageService, private rendered: Renderer2, public auth:AuthService) { }
+  isBusy: boolean;
+  constructor(private http:HttpClient, private storage: StorageService, private rendered: Renderer2) { }
 
   ngOnInit() {
-    this.auth.user$.subscribe(
-      (profile) => {
-          this.profileJson = JSON.stringify(profile, null, 2);
-          console.log('profile json == ', this.profileJson);
-      });
+    this.isBusy = true;
+    this.http.get(environment.journeyApi + "Account/UserProfile").subscribe(up =>{
+      this.profile = up;
+      console.log('profile == ', this.profile);
+    }, (err) => {}, () => { this.isBusy = false;});
+    // this.auth.user$.subscribe(
+    //   (profile) => {
+    //       this.profileJson = JSON.stringify(profile, null, 2);
+    //       console.log('profile json == ', this.profileJson);
+    //   });
 
-    this.profile = {
-      name: 'juan hernandez',
-      createdAt: new Date().toDateString()
-    };
+    // this.profile = {
+    //   name: 'juan hernandez',
+    //   createdAt: new Date().toDateString()
+    // };
   }
 
   themeSelectionChanged(e){
