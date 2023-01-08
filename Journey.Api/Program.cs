@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
@@ -93,7 +94,12 @@ builder.Services.AddMemoryCache();
 
 //Identity
 var identityCnn = config.GetConnectionString("Identity");
-builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(identityCnn));
+var dbPassword = config["Authentication:DbPassword"];
+var pgConnectionBuilder = new NpgsqlConnectionStringBuilder(identityCnn)
+{
+    Password = dbPassword
+};
+builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseNpgsql(pgConnectionBuilder.ConnectionString));
 builder.Services.AddIdentity<AppUser, Microsoft.AspNetCore.Identity.IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
 
@@ -128,7 +134,7 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

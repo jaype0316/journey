@@ -38,9 +38,17 @@ namespace Journey.Api.Models
 
     public class AppIdentityDbContext : IdentityDbContext<AppUser>
     {
-        public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options) : base(options)
-        {
+        private readonly IConfiguration _configuration;
 
+        public AppIdentityDbContext(IConfiguration configuration)
+        {
+            this._configuration = configuration;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Identity"));
+            //base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

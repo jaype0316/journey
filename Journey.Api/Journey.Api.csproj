@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>f2b1ace2-699d-4172-912b-d24d650df90c</UserSecretsId>
+    <Configurations>Debug;Release;Production</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +30,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="6.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
     <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
@@ -45,6 +48,7 @@
 
   <ItemGroup>
     <Folder Include="Identity\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

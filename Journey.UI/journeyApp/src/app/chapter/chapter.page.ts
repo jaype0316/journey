@@ -29,6 +29,10 @@ export class ChapterPage implements OnInit {
   private chapterId:string;
 
   ngOnInit() {
+    
+  }
+
+  ionViewDidEnter() {
     this.loading.chapters = true;
 
     this.http.get(environment.journeyApi + "Chapter/list").subscribe((data:any[]) =>{
@@ -46,10 +50,6 @@ export class ChapterPage implements OnInit {
     }, 
     (error:any) => {},
     () => { this.loading.chapters = false;} );
-  }
-
-  ionViewDidEnter() {
-    
   }
 
   private getChapter(chapterId:string):Observable<Chapter>{
