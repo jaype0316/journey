@@ -9,13 +9,15 @@ import { ProfilePageRoutingModule } from './profile-routing.module';
 import { ProfilePage } from './profile.page';
 import { AuthenticationButtonComponent } from '../shared/authentication-button/authentication-button.component';
 
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ProfilePageRoutingModule
+    ProfilePageRoutingModule,
+    AuthenticationButtonComponent
   ],
-  declarations: [ProfilePage, AuthenticationButtonComponent]
+  declarations: [ProfilePage]
 })
 export class ProfilePageModule {}

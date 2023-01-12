@@ -9,13 +9,15 @@ import { AboutPageRoutingModule } from './about-routing.module';
 import { AboutPage } from './about.page';
 import { AuthenticationButtonComponent } from '../shared/authentication-button/authentication-button.component';
 
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AboutPageRoutingModule
+    AboutPageRoutingModule,
+    AuthenticationButtonComponent
   ],
-  declarations: [AboutPage,AuthenticationButtonComponent]
+  declarations: [AboutPage]
 })
 export class AboutPageModule {}

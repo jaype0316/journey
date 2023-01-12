@@ -107,7 +107,7 @@ builder.Services.AddIdentity<AppUser, Microsoft.AspNetCore.Identity.IdentityRole
 //                .AddEntityFrameworkStores<AppIdentityDbContext>();
 
 //JWT Auth
-var authority = builder.Environment.EnvironmentName == "Production" ? "https://dev-2mb38pu2.us.auth0.com/" : "https://localhost:7030";
+var authority = builder.Environment.EnvironmentName == "Production" ? "http://www.iter-meum.com/" : "https://localhost:7030";
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(options =>
 {
@@ -116,7 +116,7 @@ builder.Services.AddAuthentication(options =>
 }).AddJwtBearer(options =>
 {
     options.Authority = authority;
-    options.Audience = builder.Environment.EnvironmentName == "Production" ? "https://beyourhero.journey.com/api" : "https://localhost:7030";
+    options.Audience = builder.Environment.EnvironmentName == "Production" ? "http://www.iter-meum.com/" : "https://localhost:7030";
     options.SaveToken = true;
     options.Configuration = new OpenIdConnectConfiguration();
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()

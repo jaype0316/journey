@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { IonicModule } from '@ionic/angular';
 import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
+  standalone:true,
   selector: 'app-authentication-button',
+  imports:[IonicModule],
   templateUrl: './authentication-button.component.html',
   styleUrls: ['./authentication-button.component.scss'],
 })

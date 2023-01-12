@@ -14,8 +14,9 @@ import { AuthenticationButtonComponent } from '../shared/authentication-button/a
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    AuthenticationButtonComponent
   ],
-  declarations: [HomePage, AuthenticationButtonComponent]
+  declarations: [HomePage]
 })
 export class HomePageModule {}

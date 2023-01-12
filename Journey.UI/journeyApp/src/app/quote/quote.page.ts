@@ -6,7 +6,7 @@ import { Quote } from '../models/quote';
 @Component({
   selector: 'app-quote',
   templateUrl: './quote.page.html',
-  styleUrls: ['./quote.page.scss'],
+  styleUrls: ['./quote.page.scss']
 })
 export class QuotePage implements OnInit {
 
@@ -17,6 +17,10 @@ export class QuotePage implements OnInit {
 
   ngOnInit() {
     this.getQuote();
+  }
+
+  ionViewDidEnter(){
+    
   }
 
   async getQuote(){

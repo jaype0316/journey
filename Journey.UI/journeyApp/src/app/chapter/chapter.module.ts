@@ -22,8 +22,9 @@ SwiperCore.use([Autoplay, Keyboard, Pagination, Scrollbar, Zoom, Virtual, Naviga
     FormsModule,
     IonicModule,
     ChapterPageRoutingModule,
-    SwiperModule
+    SwiperModule,
+    AuthenticationButtonComponent
   ],
-  declarations: [ChapterPage, AuthenticationButtonComponent]
+  declarations: [ChapterPage]
 })
 export class ChapterPageModule {}

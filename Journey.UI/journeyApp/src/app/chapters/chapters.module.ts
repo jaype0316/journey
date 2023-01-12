@@ -13,8 +13,9 @@ import { AuthenticationButtonComponent } from '../shared/authentication-button/a
     CommonModule,
     FormsModule,
     IonicModule,
-    ChaptersPageRoutingModule
+    ChaptersPageRoutingModule,
+    AuthenticationButtonComponent
   ],
-  declarations: [ChaptersPage,AuthenticationButtonComponent]
+  declarations: [ChaptersPage]
 })
 export class ChaptersPageModule {}

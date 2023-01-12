@@ -20,14 +20,17 @@ namespace Journey.Core.Utilities
             _cache = cache;
         }
 
-        public Task<T> GetOrAdd<T>(string key, Func<Task<T>> action)
+        public async Task<T> GetOrAdd<T>(string key, Func<Task<T>> action)
         {
-            return _cache.GetOrCreateAsync<T>(key, option =>
+            if(!_cache.TryGetValue(key, out var result))
             {
-                option.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
-                return action();
-            });
-
+                var item = await action();
+                if (!EqualityComparer<T>.Default.Equals(item, default(T)))
+                {
+                    _cache.Set<T>(key, item);
+                }
+            }
+            return _cache.Get<T>(key);
         }
 
         public Task Invalidate(string key)
