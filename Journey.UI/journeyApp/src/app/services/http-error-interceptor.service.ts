@@ -14,11 +14,14 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
-      catchError((error) => {
+      catchError((response) => {
         console.log('error is intercept')
-        console.error(error);
-        this.showToast('An error occurred');
-        return throwError(error.message);
+        console.error(response);
+        //let specific call sites handle 400's, for everything else show toast
+        if(response.status !== 400){
+          this.showToast('An error occurred');
+        }
+        return throwError(response.error);
       })
     )
   }

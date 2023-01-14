@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-authenticate',
@@ -12,13 +13,15 @@ import { Router } from '@angular/router';
 export class AuthenticatePage implements OnInit {
 
   isBusy: boolean;
+  errorMessages: [];
 
   loginForm = new FormGroup({
     email:new FormControl('',[Validators.required, Validators.email]),
     password:new FormControl('',[ Validators.required, Validators.minLength(6)])
   });
 
-  constructor(private http:HttpClient, private authService: AuthenticationService, private router:Router) { }
+  constructor(private http:HttpClient, private authService: AuthenticationService, 
+              private router:Router, private toast: ToastController) { }
 
   ngOnInit() {
   }
@@ -40,7 +43,22 @@ export class AuthenticatePage implements OnInit {
       const tokenResponse = (<any>authResponse);
       if(tokenResponse && tokenResponse.token)
         this.router.navigate(['/tabs/home']);
-    },err =>{}, () => {this.isBusy = false;});
+      }, error => {
+        console.log('error from authenticate componnet == ', error);
+        this.showToast((<Array<string>>error.authFailures).join());
+        this.isBusy = false;
+      }, () => {
+        this.isBusy = false;
+      });
+  }
+
+  async showToast(message:string){
+    const toast = await this.toast.create({
+      message:message,
+      duration: 2000,
+      color:'danger'
+    });
+    toast.present();
   }
 
 }

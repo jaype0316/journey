@@ -2,4 +2,4 @@
 <app-logout-button *ngIf="(auth.isAuthenticated$ | async)"></app-logout-button> -->
 
 
-<ion-button (click)="clickLogout()" *ngIf="auth && auth.isLoggedIn()">Logout</ion-button>
+<ion-button (click)="clickLogout()" *ngIf="auth && isAuthenticated">Logout</ion-button>

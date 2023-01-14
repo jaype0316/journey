@@ -8,6 +8,7 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 
 import { TabsPage } from './tabs.page';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthenticatedGuard } from '../guards/auth-guard.service';
 
 const routes: Routes = [
   {
@@ -40,7 +41,8 @@ const routes: Routes = [
       },
       {
         path: 'profile',
-        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule)
+        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule),
+        canActivate:[AuthenticatedGuard]
       },
       {
         path: 'about',

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -6,7 +7,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 @Component({
   standalone:true,
   selector: 'app-authentication-button',
-  imports:[IonicModule],
+  imports:[IonicModule, CommonModule],
   templateUrl: './authentication-button.component.html',
   styleUrls: ['./authentication-button.component.scss'],
 })
@@ -23,6 +24,10 @@ export class AuthenticationButtonComponent implements OnInit {
     // this.auth.logout({
     //   returnTo:'http://localhost:8101/'
     // });
+  }
+
+  get isAuthenticated() {
+    return this.auth?.isAuthenticated();
   }
 
 }

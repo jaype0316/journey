@@ -63,6 +63,13 @@ namespace Journey.Api.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var existingUser = await _userManager.FindByEmailAsync(user.Email);
+            if(existingUser != null)
+            {
+                ModelState.AddModelError("errors", $"{user.Email} already exists. Please login instead");
+                return BadRequest(ModelState);
+            }
+
             var appUser = new AppUser()
             {
                 UserName = user.Email,
@@ -94,7 +101,7 @@ namespace Journey.Api.Controllers
 
             if (user == null)
             {
-                ModelState.AddModelError(nameof(login.Email), "Login Failed: Invalid Email or password");
+                ModelState.AddModelError("authFailures", "Login Failed: Invalid Email or password");
                 return BadRequest(ModelState);
             }
             
@@ -102,7 +109,7 @@ namespace Journey.Api.Controllers
             var signInResult = await _signInManager.PasswordSignInAsync(user, login.Password, false, false);
             if (!signInResult.Succeeded)
             {
-                ModelState.AddModelError(nameof(login.Email), "Login Failed: Invalid Email or password");
+                ModelState.AddModelError("authFailures", "Login Failed: Invalid Email or password");
                 return BadRequest(ModelState);
             }
 
