@@ -23,7 +23,7 @@ namespace Journey.Api.Controllers
     
         protected (string? UserId, string? Email) GetLoggedInUser()
         {
-            //todo: move these magic strings
+            //todo:
             var id = User?.Claims?.FirstOrDefault(c => c.Type == "Id")?.Value;
             var email = User?.Claims?.FirstOrDefault(c => c.Type == "email")?.Value;
             return (id, email);

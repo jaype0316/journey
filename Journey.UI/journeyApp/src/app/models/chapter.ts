@@ -1,3 +1,5 @@
+import { Tag } from "./tag";
+
 export class Chapter {
     pk:string;
     id:number;
@@ -5,7 +7,7 @@ export class Chapter {
     title:string;
     body:string;
     createdAt:Date;
-    tags:string[];
+    tags:Tag[];
 
     constructor() {
         this.createdAt = this.createdAt || new Date();

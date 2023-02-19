@@ -20,3 +20,16 @@ color:white;
 ion-icon {
     color:white;
 }
+
+#chapter-entry > ion-item {
+    width:100%;
+  }
+  
+  .chapter-entry-box {
+    background-color:white;
+    color:black;
+  }
+  
+  .chapter-entry-box > ion-label {
+    color:black;
+  }

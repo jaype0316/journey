@@ -39,9 +39,9 @@ export class AuthenticatePage implements OnInit {
     if(!this.loginForm.valid)
       return;    
     
-    this.authService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe(authResponse => {
-      const tokenResponse = (<any>authResponse);
-      if(tokenResponse && tokenResponse.token)
+    this.authService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe(success => {
+      console.log('auth response == ', success);
+      if(success)
         this.router.navigate(['/tabs/home']);
       }, error => {
         console.log('error from authenticate componnet == ', error);

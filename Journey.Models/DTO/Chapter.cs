@@ -47,7 +47,7 @@ namespace Journey.Models.DTO
         public int Sequence { get; set; }
         [JsonPropertyName("pk")]
         public string Pk { get; set; }
-        public IEnumerable<string>? Tags { get; set; } = new List<string>();
+        public IEnumerable<UserTag.Tag>? Tags { get; set; } = new List<UserTag.Tag>();
     }
 
     public class Chapter : IDTO, IEntity
@@ -76,6 +76,6 @@ namespace Journey.Models.DTO
         [JsonPropertyName("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
         [JsonPropertyName("tags")]
-        public IEnumerable<string>? Tags { get; set; } = new List<string>();
+        public IEnumerable<UserTag.Tag>? Tags { get; set; } = new List<UserTag.Tag>();
     }
 }

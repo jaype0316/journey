@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Journey.Core.Services.Books;
 using Journey.Core.Services.Chapters;
-using Journey.Core.Services.Quote;
+using Journey.Core.Services.Quote.ApiNinja;
+using Journey.Core.Services.Quote.ZenQuote;
 using Journey.Models.DTO;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace Journey.Core.Mappers
             CreateMap<ZenQuoteDto, Quote>().ForMember(c => c.Text, x => x.MapFrom(x => x.Q))
                                             .ForMember(c => c.Author, x => x.MapFrom(x => x.A));
             CreateMap<UserQuote.Quote, QuoteComparee>().ReverseMap();
+            CreateMap<NinjaQuoteDTO, Quote>().ForMember(c => c.Text, x => x.MapFrom(x => x.Quote)).ReverseMap();
         }
     }
 }

@@ -13,6 +13,7 @@ using Journey.Core.Repository;
 using Journey.Core.Services.Blobs;
 using Journey.Core.Services.Chapters;
 using Journey.Core.Services.Quote;
+using Journey.Core.Services.Quote.ZenQuote;
 using Journey.Core.Utilities;
 using Journey.Repository.Memory;
 using MediatR;

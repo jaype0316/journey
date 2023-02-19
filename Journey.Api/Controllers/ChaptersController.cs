@@ -42,7 +42,7 @@ namespace Journey.Api.Controllers
             
             var chapterId = await _mediator.Send(command);
             
-            await _mediator.Publish(new ChapterSavedNotification() { UserId = user.UserId });
+            await _mediator.Publish(new ChapterSavedNotification(user.UserId));
             
             return new JsonResult(chapterId);
         }

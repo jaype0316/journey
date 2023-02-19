@@ -5,15 +5,17 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+
+    <ion-chip slot="end" *ngIf="isEditMode" (click)="clickDone()" outline color="primary" [disabled]="!isPageValid()">
+      <ion-icon name="checkmark-circle"></ion-icon>
+      <ion-label>Save</ion-label>
+    </ion-chip>
+    <ion-chip slot="end" *ngIf="!isEditMode" (click)="clickEdit()" outline color="primar">
+      <ion-icon name="create"></ion-icon>
+      <ion-label>Edit</ion-label>
+    </ion-chip>
+
     <ion-buttons slot="end">
-      <ion-button *ngIf="isEditMode" [disabled]="!isPageValid()" (click)="clickDone()">
-        <ion-icon name="checkmark-outline"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="!isEditMode" (click)="clickEdit()">
-        <ion-icon name="create-outline"></ion-icon>
-      </ion-button>
-      <!-- <app-login-button *ngIf="(auth.isAuthenticated$ | async) === false"></app-login-button>
-      <app-logout-button *ngIf="(auth.isAuthenticated$ | async)"></app-logout-button> -->
       <app-authentication-button></app-authentication-button>
     </ion-buttons>
     <ion-title>Home</ion-title>
@@ -24,7 +26,7 @@
 
   <ion-progress-bar *ngIf="isLoading" type="indeterminate" style="margin-top:50%"></ion-progress-bar>
   
-  <div class="home-background">
+  <div class="home-background" *ngIf="book">
     <!-- <div class="logo">
       <p align="center"><ion-icon name="globe-outline"></ion-icon></p>
     </div> -->
@@ -54,7 +56,7 @@
       </ion-row>
       <ion-row style="text-align:center">
         <ion-col size="12">
-          <ion-button (click)="clickNewEntry()">New Entry</ion-button>
+          <ion-button [disabled]="isEditMode" (click)="clickNewEntry()">New Entry</ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>

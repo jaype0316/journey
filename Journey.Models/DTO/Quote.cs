@@ -9,20 +9,9 @@ namespace Journey.Models.DTO
 {
     public class Quote
     {
-        /*
-         * 
-         * q = quote text
-            a = author name
-            i = author image (key required)
-            c = character count
-            h = pre-formatted HTML quote
-        ex: "q": "Lack of emotion causes lack of progress and lack of motivation.",
-	        "a": "Tony Robbins",
-	        "i": "https://zenquotes.io/img/tony-robbins.jpg",
-	        "c": "63",
-         */
         public string Text { get; set; }
         public string Author { get; set; }
+        public string? Category { get; set; }
     }
 
     public class UserQuote :  IEntity, IDTO

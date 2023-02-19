@@ -21,36 +21,36 @@ const routes: Routes = [
       },
       {
         path: 'chapters',
-        loadChildren: () => import('../chapters/chapters.module').then(m => m.ChaptersPageModule)
+        loadChildren: () => import('../chapters/chapters.module').then(m => m.ChaptersPageModule),
+        canActivate:[AuthenticatedGuard]
       },
       {
         path: 'chapters/new',
-        loadChildren: () => import('../new-chapter/new-chapter.module').then(m => m.NewChapterPageModule)
+        loadChildren: () => import('../new-chapter/new-chapter.module').then(m => m.NewChapterPageModule),
+        canActivate:[AuthenticatedGuard]
       },
       {
         path: 'chapter/update/:id',
-        loadChildren: () => import('../update-chapter/update-chapter.module').then(m => m.UpdateChapterPageModule)
+        loadChildren: () => import('../update-chapter/update-chapter.module').then(m => m.UpdateChapterPageModule),
+        canActivate:[AuthenticatedGuard]
       },
       {
         path: 'chapter/:id',
-        loadChildren: () => import('../chapter/chapter.module').then(m => m.ChapterPageModule)
+        loadChildren: () => import('../chapter/chapter.module').then(m => m.ChapterPageModule),
+        canActivate:[AuthenticatedGuard]
       },
       {
         path: 'quote',
         loadChildren: () => import('../quote/quote.module').then(m => m.QuotePageModule)
       },
       {
-        path: 'profile',
-        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule),
+        path: 'tags',
+        loadChildren: () => import('../tags/tags.module').then(m => m.TagsPageModule),
         canActivate:[AuthenticatedGuard]
       },
       {
         path: 'about',
         loadChildren: () => import('../about/about.module').then(m => m.AboutPageModule)
-      },
-      {
-        path: 'callback',
-        loadChildren: () => import('../home/home.module').then(m => m.HomePageModule)
       },
       {
         path: '',

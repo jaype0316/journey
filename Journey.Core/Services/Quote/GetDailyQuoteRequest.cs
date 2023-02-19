@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Journey.Core.Repository;
+using Journey.Core.Services.Quote.ZenQuote;
 using Journey.Models.DTO;
 using MediatR;
 using System;

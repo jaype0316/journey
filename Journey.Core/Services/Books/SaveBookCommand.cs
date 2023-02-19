@@ -36,12 +36,14 @@ namespace Journey.Core.Services.Books
         private readonly IRepository _repository;
         private readonly IMapper _mapper;
         private readonly IEntityKeyProvider _entityKeyProvider;
+        private readonly ICacheProvider _cacheProvider;
 
-        public SaveBookCommandHandler(IRepository repository, IMapper mapper, IEntityKeyProvider entityKeyProvider)
+        public SaveBookCommandHandler(IRepository repository, IMapper mapper, IEntityKeyProvider entityKeyProvider, ICacheProvider cacheProvider)
         {
             this._entityKeyProvider = entityKeyProvider;
             this._repository = repository;
             this._mapper = mapper;
+            this._cacheProvider = cacheProvider;
         }
         public async Task<Book> Handle(SaveBookCommand request, CancellationToken cancellationToken)
         {
@@ -55,6 +57,8 @@ namespace Journey.Core.Services.Books
             {
                 await _repository.UpdateAsync<Book>(book);
             }
+
+            
 
             return  book;
         }

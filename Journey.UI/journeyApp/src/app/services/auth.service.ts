@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { shareReplay } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { StorageService } from './storage.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,16 @@ export class AuthenticationService {
   constructor(private http: HttpClient, private storage:StorageService, private jwtHelper:JwtHelperService) { }
 
   login(email:string, password:string){
-    const loginRequest = this.http.post(environment.journeyApi + 'Account/Login', {email, password}).pipe(shareReplay());
-    loginRequest.subscribe((response) =>{this.setSession(response)});
-
-    return loginRequest;
+    return this.http.post(environment.journeyApi + 'Account/Login', {email, password})
+      .pipe(map(response => {
+        const tokenResponse = (<any>response);
+        if(tokenResponse && tokenResponse.token){
+          this.setSession(response);
+          return true;
+        }
+        return false;
+      })
+    );
   }
 
   private getAuthToken():string {
@@ -24,7 +31,6 @@ export class AuthenticationService {
   }
 
   private setSession(authResponse){
-    //this.storage.setItem('expires_at', authResponse.expiresAt);
     this.storage.save('jwt_token', authResponse.token);
   }
 

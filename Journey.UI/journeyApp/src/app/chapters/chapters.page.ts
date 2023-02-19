@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonInfiniteScroll } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Chapter } from '../models/chapter';
 import { StorageService } from '../services/storage.service';
@@ -19,21 +20,25 @@ export class ChaptersPage implements OnInit {
   skip = 0;
   take = 20;
   isLoading:boolean = false;
-  tagLabels = ['Perseverance', 'Resiliency', 'Commitment', 'Sacrifice'];
   tags = [];
-  constructor(private http:HttpClient, private router:Router, private route:ActivatedRoute, private storage:StorageService) { }
+  subscriptions: Subscription[];
+
+  constructor(private http:HttpClient, private router:Router, private route:ActivatedRoute, private storage:StorageService) { 
+    this.subscriptions = new Array();
+  }
 
   ngOnInit() {   
-    this.tags.push({label: 'All', isActive: true});
-    this.tagLabels.map((val,index) => {
-      this.tags.push({ label: val, isActive: false});
-    });
-    
   }
 
   ionViewDidEnter() {
+    this.getChapters();
+    this.getTags();
+  }
+
+  private getChapters(){
     this.isLoading = true;
-    this.http.get(environment.journeyApi + "Chapter/listheaders").subscribe((data:any[]) =>{
+    this.data = [];
+    let chaptersRequest = this.http.get(environment.journeyApi + "Chapter/listheaders").subscribe((data:any[]) =>{
        let chapters = data;
        if(chapters && chapters.length){
         this.data = [];
@@ -46,6 +51,20 @@ export class ChaptersPage implements OnInit {
     }, () => {
       this.isLoading = false;
     });
+    this.subscriptions.push(chaptersRequest);
+  }
+
+  private getTags(){
+    let tagsRequest = this.http.get(environment.journeyApi + "tags").subscribe((tags:any[]) => {
+      this.tags = [];
+      tags.map((val,index) => {
+        this.tags.push({ label: val.name, isActive: false});
+      });
+      this.tags.unshift({label: 'All', isActive: true})
+      console.log('tags == ', this.tags);
+    },(err) =>{}, () => {}); 
+
+    this.subscriptions.push(tagsRequest);
   }
 
   pageChapters(isInitialLoad: boolean, event) {
@@ -128,10 +147,9 @@ export class ChaptersPage implements OnInit {
     this.tags[0].isActive = false;
     const activeTags = this.getActiveTags();
     this.pagedChapters =  this.data.filter((chapter, index) => {
-      let chapterTags = chapter.tags || [];
+      let chapterTags = chapter.tags.map(t => t.name) || [];
       let intersection = activeTags.filter((tag) => chapterTags.includes(tag.label));
       return intersection.length > 0;
-      //return (value.tags && value.tags.indexOf(tag.label) > -1);
     });
   }
 
@@ -147,6 +165,10 @@ export class ChaptersPage implements OnInit {
 
   searchInputCanceled(){
     this.pageChapters(true, null);
+  }
+
+  ionViewWillLeave(){
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
 }

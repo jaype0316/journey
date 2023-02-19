@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Journey.Core.Services.Quote
+namespace Journey.Core.Services.Quote.ZenQuote
 {
     public interface IZenQuoteClientHandler
     {
@@ -24,7 +24,7 @@ namespace Journey.Core.Services.Quote
 
         public async Task<IEnumerable<ZenQuoteDto>> GetQuotes()
         {
-            return await _cache.GetOrAdd<IEnumerable<ZenQuoteDto>>(QUOTES_CACHE_KEY, async () =>
+            return await _cache.GetOrAdd(QUOTES_CACHE_KEY, async () =>
             {
                 return await _client.GetQuotes();
             });

@@ -4,10 +4,11 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Chapter</ion-title>
+    <ion-chip slot="end" (click)="clickEdit()" outline color="primary">
+      <ion-icon name="create"></ion-icon>
+      <ion-label>Edit</ion-label>
+    </ion-chip>
     <ion-buttons slot="end">
-      <ion-button (click)="clickEdit()">
-        <ion-icon name="create-outline"></ion-icon>
-      </ion-button>
       <app-authentication-button></app-authentication-button>
     </ion-buttons>
   </ion-toolbar>
@@ -40,9 +41,9 @@
   <ion-grid *ngIf="!loading.chapter && swiper && currentChapter">
     <ion-row>
       <ion-col>
-        <ion-segment [scrollable]="true">
+        <ion-segment [scrollable]="true" color="dark">
             <ion-segment-button *ngFor="let tag of currentChapter.tags; trackBy: trackTag">
-              <ion-label>{{tag}}</ion-label>
+              <ion-label>{{tag.name}}</ion-label>
             </ion-segment-button>
         </ion-segment>
         <!-- <ion-chip *ngFor="let tag of currentChapter.tags; trackBy: trackTag">{{tag}}</ion-chip> -->

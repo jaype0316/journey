@@ -19,7 +19,7 @@ namespace Journey.Core.ViewModels
         [JsonPropertyName("userId")]
         public string UserId { get; set; }
         [JsonPropertyName("tags")]
-        public IEnumerable<string> Tags { get; set; }
+        public IEnumerable<UserTag.Tag>? Tags { get; set; } = new List<UserTag.Tag>();
         [JsonPropertyName("sequence")]
         public int Sequence { get; set; }
 

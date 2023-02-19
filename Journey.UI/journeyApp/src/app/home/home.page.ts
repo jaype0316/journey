@@ -3,7 +3,7 @@ import { Book } from '../models/book';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ToastController } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { Observable, Subscribable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Browser } from '@capacitor/browser';
 import { mergeMap } from 'rxjs/operators';
@@ -21,6 +21,7 @@ export class HomePage implements OnInit {
   isLoading:boolean;
   profile:any;
   isChangingImage:boolean;
+  bookSubscription: Subscription;
 
   BUCKET_URI: string = 'https://journey-logos.s3.us-east-2.amazonaws.com/';
   FALLBACK_COVER:string = 'https://journey-logos.s3.us-east-2.amazonaws.com/fallback-cover.jpg';
@@ -30,8 +31,15 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     //re-direct user to login if not authenticated
+    // this.isLoading = true;
+    // this.bootstrap().subscribe((book) => {
+    //   this.book = book;
+    // },(err) =>{}, () => {this.isLoading = false;}); 
+  }
+
+  ionViewDidEnter(){
     this.isLoading = true;
-    this.bootstrap().subscribe((book) => {
+    this.bookSubscription = this.bootstrap().subscribe((book) => {
       this.book = book;
     },(err) =>{}, () => {this.isLoading = false;}); 
   }
@@ -109,4 +117,9 @@ export class HomePage implements OnInit {
       },(err) => {}, () => {this.isChangingImage = false;})
     }
   }
+
+  ionViewWillLeave(){
+    this.bookSubscription.unsubscribe();
+  }
+
 }

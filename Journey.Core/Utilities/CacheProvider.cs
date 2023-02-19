@@ -36,7 +36,7 @@ namespace Journey.Core.Utilities
         public Task Invalidate(string key)
         {
             if (_cache.TryGetValue(key, out var value))
-                _cache.Remove(value);
+                _cache.Remove(key);
 
             return Task.CompletedTask;
         }

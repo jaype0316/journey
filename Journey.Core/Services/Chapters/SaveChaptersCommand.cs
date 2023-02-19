@@ -22,7 +22,7 @@ namespace Journey.Core.Services.Chapters
         public string? Thumbnail { get; set; }
         public string? UserId { get; set; }
         public string? Pk { get; set; }
-        public string[]? Tags { get; set; }
+        public IEnumerable<UserTag.Tag>? Tags { get; set; }
     }
 
     public class SaveCommandHandler : IRequestHandler<SaveChapterCommand, string>

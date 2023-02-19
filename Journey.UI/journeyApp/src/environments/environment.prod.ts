@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  journeyApi: 'http://www.iter-meum.com/api/',
+  journeyApi: 'https://iter-meum-api.azurewebsites.net/api/',
 };

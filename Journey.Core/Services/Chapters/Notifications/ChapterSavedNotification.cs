@@ -9,12 +9,9 @@ namespace Journey.Core.Services.Chapters.Notifications
 {
     public class ChapterSavedNotification : INotification
     {
-        public string UserId { get; set; }
+        public string UserId { get; private set; }
 
-        public ChapterSavedNotification()
-        {
 
-        }
         public ChapterSavedNotification(string userId)
         {
             UserId = UserId;

@@ -2,6 +2,7 @@
 using Journey.Core.Providers;
 using Journey.Core.Services.Blobs;
 using Journey.Core.Services.Books;
+using Journey.Core.Services.Books.Notifications;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,8 +46,13 @@ namespace Journey.Api.Controllers
         [HttpPost, Route("save")]
         public async Task<IActionResult> Save(SaveBookCommand command)
         {
-            command.UserId = GetLoggedInUser().UserId;
-            return new JsonResult(await _mediator.Send(command));
+            var user = GetLoggedInUser();
+            command.UserId = user.UserId;
+
+            var book = await _mediator.Send(command);
+            await _mediator.Publish(new BookSavedNotification(user.UserId));
+
+            return new JsonResult(book);
         }
 
         [HttpPost("upload-logo")]

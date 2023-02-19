@@ -1,9 +1,57 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>tags</ion-title>
+    <ion-chip slot="end" *ngIf="isEditMode" (click)="clickSave()" outline color="primary">
+      <ion-icon name="checkmark-circle"></ion-icon>
+      <ion-label>Save</ion-label>
+    </ion-chip>
+    <ion-chip slot="end" *ngIf="!isEditMode" (click)="clickEdit()" outline color="primar">
+      <ion-icon name="create"></ion-icon>
+      <ion-label>Edit</ion-label>
+    </ion-chip>
+    <ion-buttons slot="end">
+      <app-authentication-button></app-authentication-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
 
+<ion-content>
+  <div class="chapters-box">
+    <ion-list>
+      <ion-list-header>
+        <ion-label>My Tags</ion-label>
+        <ion-button (click)="clickAddTag()">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+      <ion-item *ngFor="let tag of tags">
+        <ion-label *ngIf="!isEditMode || (isEditMode && tag.isDefault)">{{tag.name}}</ion-label>
+        <ion-input style="color:white" *ngIf="isEditMode && !tag.isDefault" type="text" maxlength="30" [(ngModel)]="tag.name" placeholder="new tag..."></ion-input>
+        <ion-icon *ngIf="tag.isDefault" name="lock-closed"></ion-icon>
+        
+        <ion-button  *ngIf="!tag.isDefault" (click)="clickDeleteTag(tag)">
+          <ion-icon name="trash" slot="icon-only" color="white"></ion-icon>
+        </ion-button>
+        
+      </ion-item>
+      <!-- <ion-item>
+        <ion-label>Mega Man X</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>The Legend of Zelda</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>Pac-Man</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>Super Mario World</ion-label>
+      </ion-item> -->
+    </ion-list>
+  
+  </div>
+  
 </ion-content>

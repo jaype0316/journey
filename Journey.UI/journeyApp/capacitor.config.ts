@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.iter-meum',
+  appId: 'meum-iter',
   appName: 'itermeum',
   webDir: 'www',
   bundledWebRuntime: false

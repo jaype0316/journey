@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Chapter } from '../models/chapter';
+import { Tag } from '../models/tag';
 
 @Component({
   selector: 'app-update-chapter',
@@ -13,10 +15,14 @@ import { Chapter } from '../models/chapter';
 export class UpdateChapterPage implements OnInit {
   loaded:boolean = false;
   chapter:Chapter;
+  tags:Tag[];
+  tagsSelected:Tag[];
+  subscriptions: Subscription[];
 
-  //todo: move out of here
-  tags = ['Perseverance', 'Resiliency', 'Commitment', 'Sacrifice'];
-  constructor(private http:HttpClient, private route:ActivatedRoute, private toastr: ToastController, private router:Router) { }
+  constructor(private http:HttpClient, private route:ActivatedRoute, private toastr: ToastController, private router:Router) { 
+    this.subscriptions = new Array();
+    this.tagsSelected = new Array();
+  }
 
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) =>  {
@@ -25,21 +31,40 @@ export class UpdateChapterPage implements OnInit {
     });
   }
 
+  ionViewDidEnter() {
+    this.getTags();
+  }
+
   private getChapter(chapterId:string){
     this.loaded = false;
-    this.http.get(environment.journeyApi + "chapter/get/" + chapterId).subscribe((chapter:Chapter) => {
+    const chapterRequest = this.http.get(environment.journeyApi + "chapter/get/" + chapterId).subscribe((chapter:Chapter) => {
       this.chapter = chapter;
       this.loaded = true;
       console.log('current chapter == ', this.chapter);
+      this.tagsSelected = this.chapter.tags;
     }, (error:any) => {
     });
+
+    this.subscriptions.push(chapterRequest);
+  }
+
+  private getTags(){
+    let tagsRequest = this.http.get(environment.journeyApi + "tags").subscribe((tags:any[]) => {
+      this.tags = tags;
+      console.log('tags == ', this.tags);
+    },(err) =>{}, () => {}); 
+
+    this.subscriptions.push(tagsRequest);
   }
 
   clickSave(){
-    this.http.post(environment.journeyApi + "chapter/Save", this.chapter).subscribe((resp:any) => {
+    this.chapter.tags = this.tagsSelected;
+    const saveRequest = this.http.post(environment.journeyApi + "chapter/Save", this.chapter).subscribe((resp:any) => {
         this.showToast('Saved');
         this.router.navigate(['tabs/chapters']);
     });
+
+    this.subscriptions.push(saveRequest);
   }
 
   changeTags($event){
@@ -53,6 +78,18 @@ export class UpdateChapterPage implements OnInit {
       duration: 2000
     });
     toast.present();
+  }
+
+  compareWith(t1, t2){
+    return t1 && t2 ? t1.id === t2.id : t1 === t2;
+  }
+
+  changeSelectedTags(evt){
+    this.tagsSelected = evt.target.value;
+  }
+
+  ionViewWillLeave(){
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
 }

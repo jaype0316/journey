@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Journey.Core.Services.Quote
+namespace Journey.Core.Services.Quote.ZenQuote
 {
     /*
      * GENERATED CLASS

@@ -35,7 +35,7 @@
       <ion-row>
         <ion-col size="12">
           <ion-select placeholder="Tags (optional)" [multiple]="true" (ionChange)="changeTags($event)">
-            <ion-select-option *ngFor="let tag of tags" [value]="tag">{{tag}}</ion-select-option>
+            <ion-select-option *ngFor="let tag of tags" [value]="tag">{{tag.name}}</ion-select-option>
           </ion-select>
         </ion-col>
       </ion-row>

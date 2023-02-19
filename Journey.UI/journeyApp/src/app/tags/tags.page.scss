@@ -1,0 +1,33 @@
+h1, h2, h3, h4, h5, h6 {
+    color:white;
+}
+
+p {
+    color: white;
+}
+
+.chapters-box {
+    z-index: 3;
+    background-color: rgba(44, 50, 55, 0.85);
+    border-radius: 1px;
+    // min-height:81%;
+    margin:15px;
+}
+
+ion-item{
+    --ion-item-background:transparent;
+    color:white;
+ }
+
+ ion-list {
+    --ion-item-background: transparent;
+}
+
+ion-chip {
+    color:white;
+}
+
+ion-label {
+    color:white;
+}
+

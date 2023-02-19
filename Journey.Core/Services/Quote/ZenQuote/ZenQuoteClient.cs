@@ -8,7 +8,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Journey.Core.Services.Quote
+namespace Journey.Core.Services.Quote.ZenQuote
 {
     public interface IZenQuoteClient
     {
@@ -35,7 +35,7 @@ namespace Journey.Core.Services.Quote
                 _logger.LogInformation($"ZenQuoteClient.GetQuotes: {response.StatusCode}. {response.ReasonPhrase}");
                 return Enumerable.Empty<ZenQuoteDto>();
             }
-                
+
             return await response.Content.ReadFromJsonAsync<IEnumerable<ZenQuoteDto>>();
         }
     }

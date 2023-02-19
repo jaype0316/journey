@@ -8,7 +8,9 @@ using Journey.Core.Services.Blobs;
 using Journey.Core.Services.Books;
 using Journey.Core.Services.Chapters;
 using Journey.Core.Services.User;
+using Journey.Core.Utilities;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -32,11 +34,12 @@ namespace Journey.Api.Controllers
         readonly IConfiguration _config;
         readonly UserManager<AppUser> _userManager;
         readonly SignInManager<AppUser> _signInManager;
+        readonly ICacheProvider _cacheProvider;
         private readonly IApiAuthenticationTokenProvider _tokenProvider;
 
         public AccountController(IMediator mediator, IBlobStorageService blobStorage, IBlobKeyProvider keyProvider, 
                                 IMapper mapper, IConfiguration config, UserManager<AppUser> userManager, 
-                                SignInManager<AppUser> signInManager, IApiAuthenticationTokenProvider tokenProvider) :base(mediator, mapper)
+                                SignInManager<AppUser> signInManager, IApiAuthenticationTokenProvider tokenProvider, ICacheProvider cacheProvider) :base(mediator, mapper)
         {
             this._blobStorage = blobStorage;
             this._blobObjectKeyProvider = keyProvider;
@@ -44,6 +47,7 @@ namespace Journey.Api.Controllers
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._tokenProvider = tokenProvider;
+            this._cacheProvider = cacheProvider;
         }
 
 
@@ -94,6 +98,8 @@ namespace Journey.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(UserLogin login)
         {
+            var t = User.Identity.IsAuthenticated;
+
             if (!ModelState.IsValid)
                 return BadRequest();
 
@@ -104,15 +110,23 @@ namespace Journey.Api.Controllers
                 ModelState.AddModelError("authFailures", "Login Failed: Invalid Email or password");
                 return BadRequest(ModelState);
             }
-            
-            await _signInManager.SignOutAsync();
-            var signInResult = await _signInManager.PasswordSignInAsync(user, login.Password, false, false);
-            if (!signInResult.Succeeded)
+
+            var t2 = User.Identity.IsAuthenticated;
+
+            if(!await _userManager.CheckPasswordAsync(user, login.Password))
             {
                 ModelState.AddModelError("authFailures", "Login Failed: Invalid Email or password");
                 return BadRequest(ModelState);
             }
 
+            await _signInManager.SignOutAsync();
+            //var signInResult = await _signInManager.PasswordSignInAsync(user, login.Password, false, false);
+            var identity = new ClaimsIdentity(IdentityConstants.ApplicationScheme);
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
+            identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+            identity.AddClaim(new Claim("Id", user.Id));
+
+            await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme,new ClaimsPrincipal(identity));
             
             var token = _tokenProvider.Provide(user);
 
@@ -135,6 +149,8 @@ namespace Journey.Api.Controllers
         [HttpPost, Route("Logout")]
         public async Task<IActionResult> Logout()
         {
+            var currentUser = GetLoggedInUser();
+            await _cacheProvider.Invalidate($"Book_{currentUser.UserId}");
             await _signInManager.SignOutAsync();
             
             return Ok();
@@ -146,9 +162,15 @@ namespace Journey.Api.Controllers
             var user = GetLoggedInUser();
             await _mediator.Send(new Core.Services.User.GetOrAddRequest(user.UserId, user.Email));
 
+            //Seed an initial jounral
             var book = await _mediator.Send(new Core.Services.Books.GetBookRequest(user.UserId));
             if(book == null)
                 book = await _mediator.Send(new SaveBookCommand(user.UserId) { Title = "My Journey", About = "What's on your mind...?", UserId = user.UserId });
+
+            //Seed initial tags
+            var userTags = await _mediator.Send(new Core.Services.Tags.GetRequest(user.UserId));
+            if (userTags == null)
+                await _mediator.Send(new Core.Services.Tags.SaveCommand(user.UserId, Core.Services.Tags.Defaults.Tags));
             
             return new JsonResult(book);
 
