@@ -1,8 +1,5 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
     <ion-title>tags</ion-title>
     <ion-chip slot="end" *ngIf="isEditMode" (click)="clickSave()" outline color="primary">
       <ion-icon name="checkmark-circle"></ion-icon>
@@ -12,9 +9,11 @@
       <ion-icon name="create"></ion-icon>
       <ion-label>Edit</ion-label>
     </ion-chip>
-    <ion-buttons slot="end">
-      <app-authentication-button></app-authentication-button>
-    </ion-buttons>
+    <ion-menu-button menu="main-menu" slot="end">
+      <ion-avatar>
+        <app-avatar></app-avatar>
+      </ion-avatar>
+    </ion-menu-button>
   </ion-toolbar>
 </ion-header>
 

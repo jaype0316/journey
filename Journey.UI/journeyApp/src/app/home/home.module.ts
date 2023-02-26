@@ -8,12 +8,15 @@ import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
 import { AuthenticationButtonComponent } from '../shared/authentication-button/authentication-button.component';
+import { AvatarComponent } from '../shared/avatar/avatar.component';
+import { AvatarComponentModule } from '../shared/avatar/avatar.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    AvatarComponentModule,
     HomePageRoutingModule,
     AuthenticationButtonComponent
   ],

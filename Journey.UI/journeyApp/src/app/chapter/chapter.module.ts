@@ -13,6 +13,7 @@ import {SwiperModule} from 'swiper/angular'
 import SwiperCore, { Autoplay, Keyboard, Pagination, Navigation, Scrollbar, Virtual, Zoom } from 'swiper';
 import { IonicSlides } from '@ionic/angular';
 import { AuthenticationButtonComponent } from '../shared/authentication-button/authentication-button.component';
+import { AvatarComponentModule } from '../shared/avatar/avatar.module';
 
 SwiperCore.use([Autoplay, Keyboard, Pagination, Scrollbar, Zoom, Virtual, Navigation, IonicSlides]);
 
@@ -21,6 +22,7 @@ SwiperCore.use([Autoplay, Keyboard, Pagination, Scrollbar, Zoom, Virtual, Naviga
     CommonModule,
     FormsModule,
     IonicModule,
+    AvatarComponentModule,
     ChapterPageRoutingModule,
     SwiperModule,
     AuthenticationButtonComponent

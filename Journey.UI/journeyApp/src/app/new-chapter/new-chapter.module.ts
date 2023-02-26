@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { NewChapterPageRoutingModule } from './new-chapter-routing.module';
 
 import { NewChapterPage } from './new-chapter.page';
+import { AvatarComponentModule } from '../shared/avatar/avatar.module';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { NewChapterPage } from './new-chapter.page';
     CommonModule,
     IonicModule,
     FormsModule,
+    AvatarComponentModule,
     NewChapterPageRoutingModule
   ],
   declarations: [NewChapterPage]

@@ -8,6 +8,7 @@ import { ProfilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
 import { AuthenticationButtonComponent } from '../shared/authentication-button/authentication-button.component';
+import { AvatarComponentModule } from '../shared/avatar/avatar.module';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { AuthenticationButtonComponent } from '../shared/authentication-button/a
     FormsModule,
     IonicModule,
     ProfilePageRoutingModule,
-    AuthenticationButtonComponent
+    AuthenticationButtonComponent,
+    AvatarComponentModule
   ],
   declarations: [ProfilePage]
 })

@@ -1,11 +1,28 @@
+p {
+    color: white;
+}
+
+.profile-box {
+    z-index: 3;
+    background-color: rgba(44, 50, 55, 0.85);
+    border-radius: 1px;
+    // min-height:81%;
+    margin:15px;
+}
+
 ion-item{
     --ion-item-background:transparent;
+    color:white;
  }
 
  ion-list {
     --ion-item-background: transparent;
 }
 
-span {
+ion-chip {
+    color:white;
+}
+
+ion-label {
     color:white;
 }

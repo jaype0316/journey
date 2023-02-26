@@ -22,6 +22,9 @@ namespace Journey.Core.Services.Blobs
             _client = client;
             _blobUriResolver = blobUriResolver;
         }
+
+        public string BlobBaseUri => "https://journey-logos.s3.us-east-2.amazonaws.com/";
+
         public async Task<bool> Add(string key, IFormFile file)
         {
             var bucketExists = await AmazonS3Util.DoesS3BucketExistV2Async(_client, BUCKET_NAME);

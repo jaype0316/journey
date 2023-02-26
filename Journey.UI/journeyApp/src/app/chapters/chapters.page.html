@@ -1,12 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
     <ion-title>Chapters</ion-title>
-    <ion-buttons slot="end">
-      <app-authentication-button></app-authentication-button>
-    </ion-buttons>
+    <ion-menu-button menu="main-menu" slot="end">
+      <ion-avatar>
+        <app-avatar></app-avatar>
+      </ion-avatar>
+    </ion-menu-button>
   </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar (ionInput)="searchInputChanged($event)" (ionCancel)="searchInputCanceled()" debounce="100"></ion-searchbar>

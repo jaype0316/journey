@@ -5,8 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { ToastController } from '@ionic/angular';
 import { Observable, Subscribable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { Browser } from '@capacitor/browser';
-import { mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -22,19 +20,12 @@ export class HomePage implements OnInit {
   profile:any;
   isChangingImage:boolean;
   bookSubscription: Subscription;
-
-  BUCKET_URI: string = 'https://journey-logos.s3.us-east-2.amazonaws.com/';
-  FALLBACK_COVER:string = 'https://journey-logos.s3.us-east-2.amazonaws.com/fallback-cover.jpg';
   
   constructor(private http:HttpClient, private toastr: ToastController, private router:Router) { 
   }
 
   ngOnInit() {
-    //re-direct user to login if not authenticated
-    // this.isLoading = true;
-    // this.bootstrap().subscribe((book) => {
-    //   this.book = book;
-    // },(err) =>{}, () => {this.isLoading = false;}); 
+
   }
 
   ionViewDidEnter(){

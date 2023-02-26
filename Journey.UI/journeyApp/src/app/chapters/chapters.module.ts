@@ -7,12 +7,14 @@ import { ChaptersPageRoutingModule } from './chapters-routing.module';
 
 import { ChaptersPage } from './chapters.page';
 import { AuthenticationButtonComponent } from '../shared/authentication-button/authentication-button.component';
+import { AvatarComponentModule } from '../shared/avatar/avatar.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    AvatarComponentModule,
     ChaptersPageRoutingModule,
     AuthenticationButtonComponent
   ],

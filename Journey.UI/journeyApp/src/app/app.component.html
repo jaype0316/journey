@@ -5,7 +5,7 @@
     
   </ion-split-pane> -->
 
-  <ion-menu menuId="main-menu" contentId="main-content" type="overlay" class="side-menu">
+  <ion-menu menuId="main-menu" contentId="main-content" side="end">
     <ion-content>
       <ion-list id="inbox-list">
         <ion-list-header [routerLink]="['/tabs/home']">Iter Meum</ion-list-header>
@@ -19,14 +19,14 @@
         </ion-menu-toggle>
       </ion-list>
 
-      <ion-list id="labels-list">
+      <!-- <ion-list id="labels-list">
         <ion-list-header></ion-list-header>
 
         <ion-item *ngFor="let label of labels" lines="none" [routerLink]="[label.url]" routerLinkActive="selected">
           <ion-icon slot="start" [ios]="label.icon" [md]="label.icon + '-sharp'"></ion-icon>
           <ion-label>{{ label.title }}</ion-label>
         </ion-item>
-      </ion-list>
+      </ion-list> -->
 
     </ion-content>
   </ion-menu>
@@ -35,7 +35,7 @@
 
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="auth.isAuthenticated()">
       <ion-fab-button [routerLink]="['/tabs/chapters/new']">
-        <ion-icon name="arrow-forward-circle"></ion-icon>
+        <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
 

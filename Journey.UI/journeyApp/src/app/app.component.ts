@@ -13,9 +13,8 @@ const callbackUri = 'com.iter-meum://dev-2mb38pu2.us.auth0.com/capacitor/com.ite
 })
 export class AppComponent {
   public appPages = [
-    { title: 'Chapers', url: '/tabs/chapters', icon: 'folder' },
-    { title: 'Quote', url: '/tabs/quote', icon: 'reader' },
-    { title: 'Profile', url: '/tabs/profile', icon: 'person' }
+    { title: 'Profile', url: '/tabs/profile', icon: 'person' },
+    { title: 'About', url: '/tabs/about', icon: 'reader' }
   ];
   public labels = [{title: 'About', url: '/tabs/about', icon: 'finger-print'}];
   constructor(private ngZone:NgZone, public auth: AuthenticationService) {}

@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { JwtModule } from '@auth0/angular-jwt';
 import { HttpErrorInterceptorService } from './services/http-error-interceptor.service';
+import { CommonService } from './services/common.service';
 
 //const redirectUri = 'com.iter-meum://dev-2mb38pu2.us.auth0.com/capacitor/com.iter-meum/callback';
 export function tokenGetter(){
@@ -35,33 +36,10 @@ export function tokenGetter(){
         disallowedRoutes:[]
       }
     })
-  //   AuthModule.forRoot({
-  //     domain:'dev-2mb38pu2.us.auth0.com',
-  //     clientId: 'XaJDsh1K9YUMMBTDE0UFtQLYAj86v6nN',//'XaJDsh1K9YUMMBTDE0UFtQLYAj86v6nN',
-  //     redirectUri: redirectUri, //'http://localhost:8101/tabs/home', //window.location.origin
-  //     audience:"https://beyourhero.journey.com/api",
-  //     //scope:'read:current_user',
-  //     httpInterceptor:{
-  //       allowedList:[
-  //         {
-  //            // Match any request that starts 'https://YOUR_DOMAIN/api/v2/' (note the asterisk)
-  //            uri: 'https://localhost:7030/api/*',
-  //           //  tokenOptions: {
-  //           //   // The attached token should target this audience
-  //           //   audience: 'https://beyourhero.journey.com/api',   
-  //           //   // The attached token should have these scopes
-  //           //   scope: 'read:current_user'
-  //           // }
-  //         },
-  //         {
-  //           uri: 'http://iter-meum.com/api/*'
-  //         }
-  //       ]
-  //     }
-  // })],
   ],
   bootstrap: [AppComponent],
   providers: [
+    CommonService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,

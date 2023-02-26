@@ -1,0 +1,43 @@
+h1, h2, h3, h4, h5, h6 {
+    color:white;
+}
+
+p {
+    color: white;
+}
+
+ion-menu ion-content {
+    // --background: var(--ion-item-background, var(--ion-background-color, #fff));
+    --background:rgba(44, 50, 55, 0.85);
+  }
+  
+  .side-menu {
+    background-color: rgba(44, 50, 55, 0.85);
+  }
+  
+// ion-menu::part(backdrop) {
+//     background-color: rgba(255, 0, 255, 0.5);
+//   }
+  
+//   ion-menu::part(container) {
+//     border-radius: 0 20px 20px 0;
+//     background-color: rgba(44, 50, 55, 0.85);
+//     box-shadow: 4px 0px 16px rgba(255, 0, 255, 0.18);
+//   }
+ion-item{
+    --ion-item-background:transparent;
+    color:white;
+ }
+
+ ion-list {
+    --ion-item-background: transparent;
+}
+
+ion-chip {
+    color:white;
+}
+
+ion-label {
+    color:white;
+}
+

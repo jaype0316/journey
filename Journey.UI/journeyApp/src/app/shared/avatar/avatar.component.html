@@ -1,0 +1,3 @@
+<img *ngIf="profile && profile.avatarUrl" height="80%" width="80%" [src]="profile.avatarUrl" class="rounded-circle img-fluid profile-picture" />
+<img *ngIf="!profile || !profile.avatarUrl" src="./assets/user_light.png" />
+

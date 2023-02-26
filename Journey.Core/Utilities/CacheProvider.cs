@@ -9,8 +9,10 @@ namespace Journey.Core.Utilities
 {
     public interface ICacheProvider
     {
-        public Task<T> GetOrAdd<T>(string key, Func<Task<T>> action);
-        public Task Invalidate(string key);
+        Task<T> GetOrAdd<T>(string key, Func<Task<T>> action);
+        Task Invalidate(string key);
+        Task<T> Get<T>(string key);
+        
     }
     public class CacheProvider : ICacheProvider
     {
@@ -30,6 +32,11 @@ namespace Journey.Core.Utilities
                     _cache.Set<T>(key, item);
                 }
             }
+            return _cache.Get<T>(key);
+        }
+
+        public async Task<T> Get<T>(string key)
+        {
             return _cache.Get<T>(key);
         }
 

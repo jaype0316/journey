@@ -1,33 +1,54 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
     <ion-title>Profile</ion-title>
-    <ion-buttons slot="end">
-      <app-authentication-button></app-authentication-button>
-    </ion-buttons>
+    <ion-chip slot="end" *ngIf="isEditMode" (click)="clickSave()" outline color="primary">
+      <ion-icon name="checkmark-circle"></ion-icon>
+      <ion-label>Save</ion-label>
+    </ion-chip>
+    <ion-chip slot="end" *ngIf="!isEditMode" (click)="clickEdit()" outline color="primar">
+      <ion-icon name="create"></ion-icon>
+      <ion-label>Edit</ion-label>
+    </ion-chip>
+    <ion-menu-button menu="main-menu" slot="end">
+      <ion-avatar>
+        <!-- <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" /> -->
+        <app-avatar></app-avatar>
+      </ion-avatar>
+    </ion-menu-button>
   </ion-toolbar>
 
 </ion-header>
 
 <ion-content>
-
   <ion-progress-bar *ngIf="isBusy" type="indeterminate" style="margin-top:50%"></ion-progress-bar>
 
-  <ion-list *ngIf="profile">
-    <ion-list-header>
-      <ion-avatar>
+  <div class="profile-box" *ngIf="profile">
+    <ion-item>
+      <ion-avatar (click)="f.click()">
         <img *ngIf="profile.avatarUrl" [src]="profile.avatarUrl" class="rounded-circle img-fluid profile-picture" />
         <img *ngIf="!profile.avatarUrl" src="./assets/user_light.png" />
       </ion-avatar>
-    </ion-list-header>
-    <ion-item>
-      <ion-label><span>Name: {{profile.firstName}} {{profile.lastName}}</span></ion-label> 
+      <!-- <ion-button expand="full" (click)="f.click()">
+         <ion-icon lazy="true" slot="start" name="image"></ion-icon>
+         <ion-label slot="end">Change</ion-label>
+      </ion-button> -->
+      <ion-label *ngIf="avatarImage" style="margin-left:10px;">{{avatarImage.name}}</ion-label>
+      <input type="file" class="ion-hide" #f accept="image/*"  (change)="avatarChanged($event.target.files)" />
     </ion-item>
-    <ion-item>
-      <ion-label><span>Email: {{profile.email}}</span></ion-label> 
-    </ion-item>
-  </ion-list>
+
+    <ion-list>
+      <ion-item>
+        <ion-label *ngIf="!isEditMode">First Name: {{profile.firstName}}</ion-label> 
+        <ion-input *ngIf="isEditMode" type="text" [(ngModel)]="profile.firstName" placeholder="first name..."></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label *ngIf="!isEditMode">Last Name: {{profile.lastName}}</ion-label>
+        <ion-input *ngIf="isEditMode" type="text" [(ngModel)]="profile.lastName" placeholder="last name..."></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label><span>Email: {{profile.email}}</span></ion-label> 
+      </ion-item>
+    </ion-list>  
+  </div>
 
 </ion-content>

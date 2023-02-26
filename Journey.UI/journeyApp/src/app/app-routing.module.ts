@@ -38,6 +38,11 @@ const routes: Routes = [
     canActivate:[AuthenticatedGuard]
   },
   {
+    path: 'profile',
+    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule),
+    canActivate:[AuthenticatedGuard]
+  },
+  {
     path: 'register',
     loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
   },

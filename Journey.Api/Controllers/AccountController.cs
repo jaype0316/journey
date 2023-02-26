@@ -39,7 +39,8 @@ namespace Journey.Api.Controllers
 
         public AccountController(IMediator mediator, IBlobStorageService blobStorage, IBlobKeyProvider keyProvider, 
                                 IMapper mapper, IConfiguration config, UserManager<AppUser> userManager, 
-                                SignInManager<AppUser> signInManager, IApiAuthenticationTokenProvider tokenProvider, ICacheProvider cacheProvider) :base(mediator, mapper)
+                                SignInManager<AppUser> signInManager, IApiAuthenticationTokenProvider tokenProvider, 
+                                ICacheProvider cacheProvider) :base(mediator, mapper)
         {
             this._blobStorage = blobStorage;
             this._blobObjectKeyProvider = keyProvider;
@@ -136,6 +137,20 @@ namespace Journey.Api.Controllers
 
         }
 
+        [HttpPost, Route("Update")]
+        public async Task<IActionResult> Update(AppUser user)
+        {
+            var identity = GetLoggedInUser();
+            var appUser = await _userManager.FindByEmailAsync(identity.Email);
+            appUser.FirstName = user.FirstName;
+            appUser.LastName = user.LastName;
+            appUser.AvatarUrl = user.AvatarUrl;
+
+            var result =  await this._userManager.UpdateAsync(appUser);
+
+            return result.Succeeded ? Ok(result) : BadRequest(result);
+        }
+
         [HttpGet, Route("UserProfile")]
         public async Task<IActionResult> GetUserProfile()
         {
@@ -173,6 +188,25 @@ namespace Journey.Api.Controllers
                 await _mediator.Send(new Core.Services.Tags.SaveCommand(user.UserId, Core.Services.Tags.Defaults.Tags));
             
             return new JsonResult(book);
+
+        }
+
+        [HttpPost, Route("ProfileImage")]
+        public async Task<IActionResult> ProfileImage(IFormFile file)
+        {
+            if (file.Length == 0) return new NoContentResult();
+            
+            var identity = GetLoggedInUser();
+            var t = User.Identity;
+            var blobObjectKey = _blobObjectKeyProvider.Provide($"{identity.UserId}-{file.FileName}");
+            var success = await _blobStorage.Add(blobObjectKey, file);
+
+            if (!success) return new NoContentResult();
+
+            var blobUri = $"{_blobStorage.BlobBaseUri}{blobObjectKey}";
+            await _cacheProvider.GetOrAdd<string>($"{User.Identity.Name}-avatar", async () => { return blobUri; });
+
+            return new JsonResult(blobUri);
 
         }
 

@@ -12,5 +12,6 @@ namespace Journey.Core.Services.Blobs
         Task<bool> Add(string key, IFormFile file);
         Task<(Stream,string)> Get(string key);
         Task<IEnumerable<string>> GetList(string bucketName, string startAfter, int take);
+        string BlobBaseUri { get; }
     }
 }
