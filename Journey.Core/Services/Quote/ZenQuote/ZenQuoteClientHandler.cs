@@ -27,7 +27,7 @@ namespace Journey.Core.Services.Quote.ZenQuote
             return await _cache.GetOrAdd(QUOTES_CACHE_KEY, async () =>
             {
                 return await _client.GetQuotes();
-            });
+            }, 1440);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Journey.Core.Services.Books
                     return await _repository.GetAsync<Book>(userBook.Pk, request.UserId);
 
                 return null;
-            }));
+            },10));
 
             //var userBook = (await _indexedRepository.QueryAsync<UserBooks>(new Query.QueryOption() { Field = "userId", Value = request.UserId})).FirstOrDefault();
             //for now just return the first one since we're only allowing one at the moment

@@ -204,7 +204,7 @@ namespace Journey.Api.Controllers
             if (!success) return new NoContentResult();
 
             var blobUri = $"{_blobStorage.BlobBaseUri}{blobObjectKey}";
-            await _cacheProvider.GetOrAdd<string>($"{User.Identity.Name}-avatar", async () => { return blobUri; });
+            await _cacheProvider.GetOrAdd<string>($"{User.Identity.Name}-avatar", async () => { return blobUri; }, 1440);
 
             return new JsonResult(blobUri);
 

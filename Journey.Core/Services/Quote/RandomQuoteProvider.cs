@@ -29,7 +29,7 @@ namespace Journey.Core.Services.Quote
                 return _mapper.Map<Journey.Models.DTO.Quote>(randomQuote);
             }
 
-            //if we got here, we need to look at the user quotes' dates, return one that hasn't been shown in 30 days or more
+            //if we got here, we need to look at the user quotes' dates, return the oldest shown
             var oldestUserQuote = userQuotes.OrderBy(c => c.LastShownAt).FirstOrDefault();
             return _mapper.Map<Journey.Models.DTO.Quote>(oldestUserQuote);
         }

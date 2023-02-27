@@ -13,6 +13,7 @@ using Journey.Core.Repository;
 using Journey.Core.Services.Blobs;
 using Journey.Core.Services.Chapters;
 using Journey.Core.Services.Quote;
+using Journey.Core.Services.Quote.ApiNinja;
 using Journey.Core.Services.Quote.ZenQuote;
 using Journey.Core.Utilities;
 using Journey.Repository.Memory;
@@ -70,6 +71,7 @@ builder.Services.AddSingleton<IAmazonDynamoDB, AmazonDynamoDBClient>(c =>
 builder.Services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
 builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
 builder.Services.AddHttpClient();
+builder.Services.Configure<Journey.Core.Services.Quote.ApiNinja.ApiNinjaSettings>(builder.Configuration.GetSection("ApiNinjaSettings"));
 
 builder.Services.Configure<DatabaseSettings>(config.GetSection(DatabaseSettings.KeyName));
 builder.Services.AddScoped<IRepository, Journey.Repository.DynamoDb.Repository>();
@@ -80,8 +82,10 @@ builder.Services.AddSingleton<IAmazonS3, AmazonS3Client>(c =>
 });
 builder.Services.AddScoped<IBlobStorageService, AwsBlobStorage>();
 builder.Services.AddScoped <IBlobKeyProvider, BlobObjectKeyProvider>();
-builder.Services.AddScoped<IZenQuoteClientHandler, ZenQuoteClientHandler>();
-builder.Services.AddScoped<IZenQuoteClient, ZenQuoteClient>();
+builder.Services.AddSingleton<IZenQuoteClientHandler, ZenQuoteClientHandler>();
+builder.Services.AddSingleton<IZenQuoteClient, ZenQuoteClient>();
+builder.Services.AddSingleton<INinjaQuoteClient, NinjaQuoteClient>();
+builder.Services.AddSingleton<IApiNinjaClientHandler, ApiNinjaClientHandler>();
 builder.Services.AddScoped<IQuoteProvider, RandomQuoteProvider>();
 builder.Services.AddScoped<IIndexedRepository, Journey.Repository.DynamoDb.IndexedRepository>();
 builder.Services.AddAutoMapper(typeof(SaveChapterCommand), typeof(Program));

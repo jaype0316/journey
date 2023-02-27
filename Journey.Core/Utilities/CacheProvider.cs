@@ -9,7 +9,7 @@ namespace Journey.Core.Utilities
 {
     public interface ICacheProvider
     {
-        Task<T> GetOrAdd<T>(string key, Func<Task<T>> action);
+        Task<T> GetOrAdd<T>(string key, Func<Task<T>> action, int expirationMinutes);
         Task Invalidate(string key);
         Task<T> Get<T>(string key);
         
@@ -22,14 +22,14 @@ namespace Journey.Core.Utilities
             _cache = cache;
         }
 
-        public async Task<T> GetOrAdd<T>(string key, Func<Task<T>> action)
+        public async Task<T> GetOrAdd<T>(string key, Func<Task<T>> action, int expirationMinutes)
         {
             if(!_cache.TryGetValue(key, out var result))
             {
                 var item = await action();
                 if (!EqualityComparer<T>.Default.Equals(item, default(T)))
                 {
-                    _cache.Set<T>(key, item);
+                    _cache.Set<T>(key, item, DateTimeOffset.UtcNow.AddMinutes(expirationMinutes));
                 }
             }
             return _cache.Get<T>(key);

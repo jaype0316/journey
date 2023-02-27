@@ -26,6 +26,8 @@ namespace Journey.Core.Mappers
             CreateMap<ZenQuoteDto, Quote>().ForMember(c => c.Text, x => x.MapFrom(x => x.Q))
                                             .ForMember(c => c.Author, x => x.MapFrom(x => x.A));
             CreateMap<UserQuote.Quote, QuoteComparee>().ReverseMap();
+
+            //API Ninja
             CreateMap<NinjaQuoteDTO, Quote>().ForMember(c => c.Text, x => x.MapFrom(x => x.Quote)).ReverseMap();
         }
     }
