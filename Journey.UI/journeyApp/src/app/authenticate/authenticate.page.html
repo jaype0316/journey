@@ -54,7 +54,15 @@
             <ion-label style="color:black">Don't have an account?</ion-label> <a routerLink="/register"> Register</a>
           </ion-col>
         </ion-row>
-      </ion-grid>   
+      </ion-grid>  
+      
+      <ion-grid *ngIf="fromRegistration">
+        <ion-row>
+          <ion-col>
+            <ion-label style="color:black">Please confirm your account by clicking the link in the email sent.</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
             
     </ion-card-content>   
   </ion-card>

@@ -12,6 +12,8 @@ using Journey.Core.Providers;
 using Journey.Core.Repository;
 using Journey.Core.Services.Blobs;
 using Journey.Core.Services.Chapters;
+using Journey.Core.Services.Communication;
+using Journey.Core.Services.Communication.SendGrid;
 using Journey.Core.Services.Quote;
 using Journey.Core.Services.Quote.ApiNinja;
 using Journey.Core.Services.Quote.ZenQuote;
@@ -72,6 +74,7 @@ builder.Services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
 builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
 builder.Services.AddHttpClient();
 builder.Services.Configure<Journey.Core.Services.Quote.ApiNinja.ApiNinjaSettings>(builder.Configuration.GetSection("ApiNinjaSettings"));
+builder.Services.Configure<Journey.Core.Services.Communication.SendGrid.SendGridSettings>(builder.Configuration.GetSection("SendGridSettings"));
 
 builder.Services.Configure<DatabaseSettings>(config.GetSection(DatabaseSettings.KeyName));
 builder.Services.AddScoped<IRepository, Journey.Repository.DynamoDb.Repository>();
@@ -87,6 +90,7 @@ builder.Services.AddSingleton<IZenQuoteClient, ZenQuoteClient>();
 builder.Services.AddSingleton<INinjaQuoteClient, NinjaQuoteClient>();
 builder.Services.AddSingleton<IApiNinjaClientHandler, ApiNinjaClientHandler>();
 builder.Services.AddScoped<IQuoteProvider, RandomQuoteProvider>();
+builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
 builder.Services.AddScoped<IIndexedRepository, Journey.Repository.DynamoDb.IndexedRepository>();
 builder.Services.AddAutoMapper(typeof(SaveChapterCommand), typeof(Program));
 builder.Services.AddScoped<IEntityKeyProvider, DefaultEntityKeyProvider>();
@@ -105,7 +109,10 @@ var pgConnectionBuilder = new NpgsqlConnectionStringBuilder(identityCnn)
     Password = dbPassword
 };
 builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseNpgsql(pgConnectionBuilder.ConnectionString));
-builder.Services.AddIdentity<AppUser, Microsoft.AspNetCore.Identity.IdentityRole>()
+builder.Services.AddIdentity<AppUser, Microsoft.AspNetCore.Identity.IdentityRole>(opt =>
+{
+    opt.SignIn.RequireConfirmedEmail = true;
+})
                 .AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
 
 //builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)

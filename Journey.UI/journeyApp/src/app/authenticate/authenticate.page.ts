@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 
 @Component({
@@ -14,6 +14,7 @@ export class AuthenticatePage implements OnInit {
 
   isBusy: boolean;
   errorMessages: [];
+  fromRegistration:boolean = false;
 
   loginForm = new FormGroup({
     email:new FormControl('',[Validators.required, Validators.email]),
@@ -21,9 +22,13 @@ export class AuthenticatePage implements OnInit {
   });
 
   constructor(private http:HttpClient, private authService: AuthenticationService, 
-              private router:Router, private toast: ToastController) { }
+              private router:Router, private toast: ToastController, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      console.log('query params = ', params);
+      this.fromRegistration = params.fromRegistration;
+    });
   }
 
   get email() {

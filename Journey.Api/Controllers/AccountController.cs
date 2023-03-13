@@ -7,6 +7,7 @@ using Journey.Core.Repository;
 using Journey.Core.Services.Blobs;
 using Journey.Core.Services.Books;
 using Journey.Core.Services.Chapters;
+using Journey.Core.Services.Communication;
 using Journey.Core.Services.User;
 using Journey.Core.Utilities;
 using MediatR;
@@ -35,12 +36,14 @@ namespace Journey.Api.Controllers
         readonly UserManager<AppUser> _userManager;
         readonly SignInManager<AppUser> _signInManager;
         readonly ICacheProvider _cacheProvider;
+        readonly IEmailSender _emailSender;
         private readonly IApiAuthenticationTokenProvider _tokenProvider;
+
 
         public AccountController(IMediator mediator, IBlobStorageService blobStorage, IBlobKeyProvider keyProvider, 
                                 IMapper mapper, IConfiguration config, UserManager<AppUser> userManager, 
                                 SignInManager<AppUser> signInManager, IApiAuthenticationTokenProvider tokenProvider, 
-                                ICacheProvider cacheProvider) :base(mediator, mapper)
+                                ICacheProvider cacheProvider, IEmailSender emailSender) :base(mediator, mapper)
         {
             this._blobStorage = blobStorage;
             this._blobObjectKeyProvider = keyProvider;
@@ -49,6 +52,7 @@ namespace Journey.Api.Controllers
             this._signInManager = signInManager;
             this._tokenProvider = tokenProvider;
             this._cacheProvider = cacheProvider;
+            this._emailSender = emailSender;
         }
 
 
@@ -84,6 +88,13 @@ namespace Journey.Api.Controllers
             var result = await _userManager.CreateAsync(appUser, user.Password);
             if (result.Succeeded)
             {
+                var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
+                var confirmationLink = Url.Action("ConfirmEmail", "Account", new { confirmationToken, Email = appUser.Email }, protocol:HttpContext.Request.Scheme);
+                //todo: move this to its own service
+                var htmlContent = $"<p>Confirm your account: <a href=\"{confirmationLink}\"></a></p>";
+                var plainContent = $"Confirm your account: {confirmationLink}";
+                await _emailSender.SendEmailAsync(appUser.Email, "Account Confirmation", plainContent, htmlContent);
+
                 return Ok(result);
             }
             else
@@ -93,6 +104,21 @@ namespace Journey.Api.Controllers
             }
 
             return Ok(ModelState);
+        }
+
+        [HttpGet, Route("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var content = "<div>User not found</div>";
+            if (user == null)
+                return base.Content("<div>User not found</div>", "text/html");
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+                return base.Content("<div>Account Confirmed, you can proceed to login</div>", "text/html");
+
+            return base.Content("<div>An error ocurred confirming your account, contact the administrator</div>", "text/html");
         }
 
         [HttpPost, Route("login")]
@@ -117,6 +143,12 @@ namespace Journey.Api.Controllers
             if(!await _userManager.CheckPasswordAsync(user, login.Password))
             {
                 ModelState.AddModelError("authFailures", "Login Failed: Invalid Email or password");
+                return BadRequest(ModelState);
+            }
+
+            if(!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                ModelState.AddModelError("authFailures", "Login Failed. Email is not confirmed");
                 return BadRequest(ModelState);
             }
 
