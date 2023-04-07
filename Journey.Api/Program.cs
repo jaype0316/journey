@@ -119,7 +119,7 @@ builder.Services.AddIdentity<AppUser, Microsoft.AspNetCore.Identity.IdentityRole
 //                .AddEntityFrameworkStores<AppIdentityDbContext>();
 
 //JWT Auth
-var authority = builder.Environment.EnvironmentName == "Production" ? "http://www.iter-meum.com/" : "https://localhost:7030";
+var authority = builder.Environment.EnvironmentName == "Production" ? "https://iter-meum-api.azurewebsites.net/" : "https://localhost:7030";
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(options =>
 {
@@ -128,7 +128,7 @@ builder.Services.AddAuthentication(options =>
 }).AddJwtBearer(options =>
 {
     options.Authority = authority;
-    options.Audience = builder.Environment.EnvironmentName == "Production" ? "http://www.iter-meum.com/" : "https://localhost:7030";
+    options.Audience = builder.Environment.EnvironmentName == "Production" ? "https://iter-meum-api.azurewebsites.net/" : "https://localhost:7030";
     options.SaveToken = true;
     options.Configuration = new OpenIdConnectConfiguration();
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
