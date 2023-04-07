@@ -43,7 +43,8 @@ export class RegisterPage implements OnInit {
       this.isBusy = true;
       this.http.post(environment.journeyApi + 'Account/Register', this.registerForm.value).subscribe(() =>{
         this.isBusy = false;
-        this.router.navigate(['/authenticate?fromRegistration=true']);
+        this.router.navigate(['/authenticate'],
+                            { queryParams: { fromRegistration: true }});
       }, errorResponse => {
           this.errors = errorResponse.errors;
           this.isBusy = false;

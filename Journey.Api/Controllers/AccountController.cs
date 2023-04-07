@@ -91,8 +91,9 @@ namespace Journey.Api.Controllers
                 var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
                 var confirmationLink = Url.Action("ConfirmEmail", "Account", new { confirmationToken, Email = appUser.Email }, protocol:HttpContext.Request.Scheme);
                 //todo: move this to its own service
-                var htmlContent = $"<p>Confirm your account: <a href=\"{confirmationLink}\"></a></p>";
-                var plainContent = $"Confirm your account: {confirmationLink}";
+                var htmlContent = $"<p>Confirm your account by clicking: <a href=\"{confirmationLink}\">here</a></p>";
+                var plainContent = $"Confirm your account!!: {confirmationLink}";
+                
                 await _emailSender.SendEmailAsync(appUser.Email, "Account Confirmation", plainContent, htmlContent);
 
                 return Ok(result);
@@ -107,14 +108,15 @@ namespace Journey.Api.Controllers
         }
 
         [HttpGet, Route("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string confirmationToken, string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             var content = "<div>User not found</div>";
             if (user == null)
                 return base.Content("<div>User not found</div>", "text/html");
 
-            var result = await _userManager.ConfirmEmailAsync(user, token);
+            var result = await _userManager.ConfirmEmailAsync(user, confirmationToken);
             if (result.Succeeded)
                 return base.Content("<div>Account Confirmed, you can proceed to login</div>", "text/html");
 

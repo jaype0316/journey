@@ -19,21 +19,30 @@ namespace Journey.Core.Services.Communication.SendGrid
         }
         public async Task SendEmailAsync(string target, string subject, string body, string bodyHtml)
         {
+            //var client = new SendGridClient(_settings.ApiKey);
+            //var from = new EmailAddress(_settings.SenderEmail, _settings.SenderName);
+            //var to = new EmailAddress(target);
+            //var plainTextContent = "and easy to do anywhere, even with C#";
+            //var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
+            //var msg = new SendGridMessage()
+            //{
+            //    From = from,
+            //    Subject = subject,
+            //    HtmlContent = bodyHtml
+            //};
+            //msg.AddTo(target);
+            ////msg.SetClickTracking(false, false);
+            ////var msg = MailHelper.CreateSingleEmail(from, to, subject, null, bodyHtml);
+
+            //var response = await client.SendEmailAsync(msg);
+
+            //var apiKey = Environment.GetEnvironmentVariable(_settings.ApiKey);
             var client = new SendGridClient(_settings.ApiKey);
             var from = new EmailAddress(_settings.SenderEmail, _settings.SenderName);
-            var to = new EmailAddress(target);
+            var to = new EmailAddress(target, target);
             var plainTextContent = "and easy to do anywhere, even with C#";
             var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
-            var msg = new SendGridMessage()
-            {
-                From = from,
-                Subject = subject,
-                HtmlContent = bodyHtml
-            };
-            msg.AddTo(target);
-            msg.SetClickTracking(false, false);
-            //var msg = MailHelper.CreateSingleEmail(from, to, subject, null, bodyHtml);
-            
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, bodyHtml);
             var response = await client.SendEmailAsync(msg);
         }
     }
