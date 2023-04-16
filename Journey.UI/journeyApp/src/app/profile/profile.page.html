@@ -33,7 +33,7 @@
          <ion-label slot="end">Change</ion-label>
       </ion-button> -->
       <ion-label *ngIf="avatarImage" style="margin-left:10px;">{{avatarImage.name}}</ion-label>
-      <input type="file" class="ion-hide" #f accept="image/*"  (change)="avatarChanged($event.target.files)" />
+      <input type="file" class="ion-hide" #f accept="image/*"  (change)="avatarChanged($event)" />
     </ion-item>
 
     <ion-list>

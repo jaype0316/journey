@@ -10,7 +10,6 @@ import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-avatar',
-  imports:[IonicModule, CommonModule, RouterModule],
   templateUrl: './avatar.component.html',
   styleUrls: ['./avatar.component.scss'],
 })

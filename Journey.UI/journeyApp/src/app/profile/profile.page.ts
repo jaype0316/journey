@@ -45,7 +45,11 @@ export class ProfilePage implements OnInit {
     this.rendered.setAttribute(document.body, 'color-theme', this.defaultTheme);
   }
 
-  avatarChanged(files){
+  avatarChanged($event){
+    if(!$event || !$event.target || $event.target.files)
+      return;
+    
+      let files = $event.target.files;
     this.isChangingAvatar = (this.avatarImage == null || this.avatarImage.fileName != files[0].name);
     this.clickEdit();
     this.avatarImage = files[0];

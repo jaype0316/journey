@@ -32,7 +32,7 @@ export function tokenGetter(){
     JwtModule.forRoot({
       config:{
         tokenGetter: tokenGetter,
-        allowedDomains: ["https://localhost:7030", "http://localhost:8100"],
+        allowedDomains: ["https://localhost:7030", "http://localhost:8100", "https://iter-meum-api.azurewebsites.net"],
         disallowedRoutes:[]
       }
     })
