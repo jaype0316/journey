@@ -365,3 +365,6 @@ FodyWeavers.xsd
 # App settings
 appsettings.json
 /domain info.txt
+/Journey.UI/journeyApp/android/app/src/main/AndroidManifest.xml
+/Journey.UI/journeyApp/android/app/build.gradle
+/Journey.UI/journeyApp/android/variables.gradle
