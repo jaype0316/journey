@@ -3,6 +3,7 @@ import { mergeMap } from 'rxjs/operators';
 import { Browser } from '@capacitor/browser';
 import { App } from '@capacitor/app';
 import { AuthenticationService } from './services/auth.service';
+import { Router } from '@angular/router';
 
 const callbackUri = 'com.iter-meum://dev-2mb38pu2.us.auth0.com/capacitor/com.iter-meum/callback';
 
@@ -14,10 +15,17 @@ const callbackUri = 'com.iter-meum://dev-2mb38pu2.us.auth0.com/capacitor/com.ite
 export class AppComponent {
   public appPages = [
     { title: 'Profile', url: '/tabs/profile', icon: 'person' },
-    { title: 'About', url: '/tabs/about', icon: 'reader' }
+    { title: 'About', url: '/tabs/about', icon: 'reader' },
+    { title: 'Logout', url: '', icon: 'exit', onClick: this.clickLogout }
   ];
   public labels = [{title: 'About', url: '/tabs/about', icon: 'finger-print'}];
-  constructor(private ngZone:NgZone, public auth: AuthenticationService) {}
+  constructor(private ngZone:NgZone, public auth: AuthenticationService, private router:Router) {}
+
+  clickLogout(){
+      this.auth.logout().subscribe(resp =>{
+        this.router.navigate(["authenticate"]);
+      });
+  }
 
   ngOnInit():void {
      // Use Capacitor's App plugin to subscribe to the `appUrlOpen` event

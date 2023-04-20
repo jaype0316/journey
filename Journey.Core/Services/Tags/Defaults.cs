@@ -15,9 +15,9 @@ namespace Journey.Core.Services.Tags
             {
                 return new List<UserTag.Tag>(3)
                 {
-                    new UserTag.Tag() { Id = Guid.NewGuid().ToString(), IsDefault = true, Name = "Perseverance" },
-                    new UserTag.Tag() { Id = Guid.NewGuid().ToString(), IsDefault = true, Name = "Joyful" },
-                    new UserTag.Tag() { Id = Guid.NewGuid().ToString(), IsDefault = true, Name = "Bitter" },
+                    new UserTag.Tag() { Id = Guid.NewGuid().ToString(), IsDefault = true, Name = "Health" },
+                    new UserTag.Tag() { Id = Guid.NewGuid().ToString(), IsDefault = true, Name = "Resilience" },
+                    new UserTag.Tag() { Id = Guid.NewGuid().ToString(), IsDefault = true, Name = "Discipline" },
                 };
             } 
         }

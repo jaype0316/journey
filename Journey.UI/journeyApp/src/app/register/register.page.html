@@ -49,7 +49,7 @@
         <ion-grid>
           <ion-row>
             <ion-col>
-              <ion-button type="submit" [disabled]="isBusy || !registerForm.valid">Register</ion-button>
+              <ion-button type="submit" [disabled]="isBusy || !registerForm.valid">Register <ion-spinner *ngIf="isBusy"></ion-spinner></ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>
