@@ -43,13 +43,14 @@ namespace Journey.Core.Services.Quote
         public async Task<Journey.Models.DTO.Quote> Handle(GetDailyQuoteRequest request, CancellationToken cancellationToken)
         {
             var zenQuotes = _mapper.Map<IEnumerable<Journey.Models.DTO.Quote>>(await _zenQuoteClientHandler.GetQuotes());
-            var ninjaQuotes = _mapper.Map<IEnumerable<Journey.Models.DTO.Quote>>(await _ninjaQuoteClientHandler.GetQuotes());
-            var combinedQuotes = zenQuotes.Union(ninjaQuotes, new QuoteComparer());
-            if (combinedQuotes == null)
-                throw new InvalidOperationException("There are no quotes");
+            //var ninjaQuotes = _mapper.Map<IEnumerable<Journey.Models.DTO.Quote>>(await _ninjaQuoteClientHandler.GetQuotes());
+            //temp
+            //var combinedQuotes = zenQuotes.Union(ninjaQuotes, new QuoteComparer());
+            //if (combinedQuotes == null)
+            //    throw new InvalidOperationException("There are no quotes");
 
             var userQuotes = await _repository.GetAsync<UserQuote>(request.UserId, request.UserId) ?? new UserQuote();
-            var randomQuote = _quoteProvider.Provide(combinedQuotes.ToHashSet(), userQuotes.Quotes);
+            var randomQuote = _quoteProvider.Provide(zenQuotes.ToHashSet(), userQuotes.Quotes);
 
             if (!userQuotes.Quotes.Any())
             {

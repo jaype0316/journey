@@ -127,20 +127,16 @@ namespace Journey.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(UserLogin login)
         {
-            var t = User.Identity.IsAuthenticated;
 
             if (!ModelState.IsValid)
                 return BadRequest();
 
             var user = await _userManager.FindByEmailAsync(login.Email);
-
             if (user == null)
             {
                 ModelState.AddModelError("authFailures", "Login Failed: Invalid Email or password");
                 return BadRequest(ModelState);
             }
-
-            var t2 = User.Identity.IsAuthenticated;
 
             if(!await _userManager.CheckPasswordAsync(user, login.Password))
             {
