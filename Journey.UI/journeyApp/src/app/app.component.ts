@@ -3,9 +3,16 @@ import { mergeMap } from 'rxjs/operators';
 import { Browser } from '@capacitor/browser';
 import { App } from '@capacitor/app';
 import { AuthenticationService } from './services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
+import { environment } from 'src/environments/environment';
+import { isPlatform } from '@ionic/angular';
+import config from 'capacitor.config';
 
-const callbackUri = 'com.iter-meum://dev-2mb38pu2.us.auth0.com/capacitor/com.iter-meum/callback';
+
+// Build the URL that Auth0 should redirect back to
+export const authCallbackUri = isPlatform('capacitor') ? `${config.appId}://dev-2mb38pu2.us.auth0.com/capacitor/${config.appId}/${environment.clientRoot}auth-callback`
+                                : environment.clientRoot;
 
 @Component({
   selector: 'app-root',
@@ -19,7 +26,9 @@ export class AppComponent {
     { title: 'Logout', url: '', icon: 'exit', onClick: this.clickLogout }
   ];
   public labels = [{title: 'About', url: '/tabs/about', icon: 'finger-print'}];
-  constructor(private ngZone:NgZone, public auth: AuthenticationService, private router:Router) {}
+
+  constructor(private ngZone:NgZone, public auth: AuthenticationService, private router:Router, 
+    private externalAuth: AuthService, private route:ActivatedRoute) {}
 
   clickLogout(){
       this.auth.logout().subscribe(resp =>{
@@ -29,22 +38,30 @@ export class AppComponent {
 
   ngOnInit():void {
      // Use Capacitor's App plugin to subscribe to the `appUrlOpen` event
-     App.addListener('appUrlOpen', ({ url }) => {
-      // Must run inside an NgZone for Angular to pick up the changes
-      // https://capacitorjs.com/docs/guides/angular
-      this.ngZone.run(() => {
-        if (url?.startsWith(callbackUri)) {
-          // If the URL is an authentication callback URL..
-          if (
-            url.includes('state=') &&
-            (url.includes('error=') || url.includes('code='))
-          ) {
-            // Call handleRedirectCallback and close the browser
-          } else {
-            Browser.close();
+    //  this.externalAuth.isAuthenticated$.subscribe(isAuthenticated =>{
+    //     console.log('is authenticated == ', isAuthenticated);
+
+    //  });
+
+    if(!isPlatform('capacitor')){
+      App.addListener('appUrlOpen', ({ url }) => {
+        // Must run inside an NgZone for Angular to pick up the changes
+        // https://capacitorjs.com/docs/guides/angular
+        this.ngZone.run(() => {
+          if (url?.startsWith(authCallbackUri)) {
+            // If the URL is an authentication callback URL..
+            if (
+              url.includes('state=') &&
+              (url.includes('error=') || url.includes('code='))
+            ) {
+              // Call handleRedirectCallback and close the browser
+              this.externalAuth.handleRedirectCallback(url).pipe(mergeMap(() => Browser.close())).subscribe();
+            } else {
+              Browser.close();
+            }
           }
-        }
+        });
       });
-    });
+     }  
   }
 }

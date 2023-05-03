@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "643713571671",
+    "project_id": "iter-meum",
+    "storage_bucket": "iter-meum.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643713571671:android:20216384eab50a3cd87c12",
+        "android_client_info": {
+          "package_name": "journey.itermeum.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643713571671-vb9mliq5ij6bavov3etqt8tibtnljsvr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPyIJTyY0H96CIHPBbrfwz44Reh3rfDBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643713571671-vb9mliq5ij6bavov3etqt8tibtnljsvr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

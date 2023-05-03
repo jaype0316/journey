@@ -7,11 +7,13 @@ import * as authInfo from 'auth_config.json';
 export const environment = {
   production: false,
   journeyApi: 'https://localhost:7030/api/',
-  auth0:{
-    domain: "dev-2mb38pu2.us.auth0.com",
-    clientId: "XaJDsh1K9YUMMBTDE0UFtQLYAj86v6nN",
-    redirectUri: window.location.origin
-  }
+  clientRoot:'http://localhost:8100/',
+  capacitorAuthCallback: 'journey.itermeum.com://dev-2mb38pu2.us.auth0.com/capacitor/journey.itermeum.com/callback'
+  // auth0:{
+  //   domain: "dev-2mb38pu2.us.auth0.com",
+  //   clientId: "XaJDsh1K9YUMMBTDE0UFtQLYAj86v6nN",
+  //   redirectUri: window.location.origin
+  // }
 };
 
 /*

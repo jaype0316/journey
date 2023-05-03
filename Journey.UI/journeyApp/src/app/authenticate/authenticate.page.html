@@ -54,6 +54,19 @@
             <ion-label style="color:white">Don't have an account?</ion-label> <a routerLink="/register"> Register</a>
           </ion-col>
         </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label>Or</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label><ion-button (click)="externalLogin()">Sign in with Google</ion-button></ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-button (click)="externalLogout()">Logout</ion-button>
+          </ion-col>
+        </ion-row>
       </ion-grid>  
       
       <ion-grid *ngIf="fromRegistration">

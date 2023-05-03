@@ -17,11 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Journey.Models", "Journey.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CacheSync.Lambda", "ChaptersCacheSync.Lambda\src\ChaptersCacheSync.Lambda\CacheSync.Lambda.csproj", "{64440CCC-8C54-45E2-BAC9-6247ADEDA3C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Journey.Sync", "Journey.Sync\Journey.Sync.csproj", "{F454F17A-5FAE-4974-928F-CABA9A17D3A7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Journey.Auth", "Journey.Auth\Journey.Auth.csproj", "{FA7E9865-1F7F-41DF-85B8-DF5A2B386DBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Journey.Tests", "Journey.Tests\Journey.Tests.csproj", "{C4B6735F-924B-4522-81EA-AE6112F6438D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Journey.Tests", "Journey.Tests\Journey.Tests.csproj", "{C4B6735F-924B-4522-81EA-AE6112F6438D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schedules", "Schedules", "{E36BF8DE-0376-4758-AB7C-9BC93FF6075E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuotesNotifications", "QuotesNotifications\QuotesNotifications.csproj", "{5906DA59-6BE6-4DC2-982B-88FBA40BE1A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,12 +74,6 @@ Global
 		{64440CCC-8C54-45E2-BAC9-6247ADEDA3C1}.Production|Any CPU.Build.0 = Production|Any CPU
 		{64440CCC-8C54-45E2-BAC9-6247ADEDA3C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64440CCC-8C54-45E2-BAC9-6247ADEDA3C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F454F17A-5FAE-4974-928F-CABA9A17D3A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F454F17A-5FAE-4974-928F-CABA9A17D3A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F454F17A-5FAE-4974-928F-CABA9A17D3A7}.Production|Any CPU.ActiveCfg = Production|Any CPU
-		{F454F17A-5FAE-4974-928F-CABA9A17D3A7}.Production|Any CPU.Build.0 = Production|Any CPU
-		{F454F17A-5FAE-4974-928F-CABA9A17D3A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F454F17A-5FAE-4974-928F-CABA9A17D3A7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA7E9865-1F7F-41DF-85B8-DF5A2B386DBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FA7E9865-1F7F-41DF-85B8-DF5A2B386DBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA7E9865-1F7F-41DF-85B8-DF5A2B386DBB}.Production|Any CPU.ActiveCfg = Production|Any CPU
@@ -90,9 +86,18 @@ Global
 		{C4B6735F-924B-4522-81EA-AE6112F6438D}.Production|Any CPU.Build.0 = Production|Any CPU
 		{C4B6735F-924B-4522-81EA-AE6112F6438D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4B6735F-924B-4522-81EA-AE6112F6438D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5906DA59-6BE6-4DC2-982B-88FBA40BE1A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5906DA59-6BE6-4DC2-982B-88FBA40BE1A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5906DA59-6BE6-4DC2-982B-88FBA40BE1A4}.Production|Any CPU.ActiveCfg = Debug|Any CPU
+		{5906DA59-6BE6-4DC2-982B-88FBA40BE1A4}.Production|Any CPU.Build.0 = Debug|Any CPU
+		{5906DA59-6BE6-4DC2-982B-88FBA40BE1A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5906DA59-6BE6-4DC2-982B-88FBA40BE1A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5906DA59-6BE6-4DC2-982B-88FBA40BE1A4} = {E36BF8DE-0376-4758-AB7C-9BC93FF6075E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BA5692C-3768-4F5F-AC90-49C44E30CCBF}

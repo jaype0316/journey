@@ -127,19 +127,21 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    options.Authority = authority;
-    options.Audience = builder.Environment.EnvironmentName == "Production" ? "https://iter-meum-api.azurewebsites.net/" : "https://localhost:7030";
-    options.SaveToken = true;
-    options.Configuration = new OpenIdConnectConfiguration();
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
-    {
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = authority,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("SigningKey").Value))
-    };
+    options.Authority = "https://dev-2mb38pu2.us.auth0.com/";
+    options.Audience = "iter-meum-api";
+    //options.Authority = authority;
+    //options.Audience = builder.Environment.EnvironmentName == "Production" ? "https://iter-meum-api.azurewebsites.net/" : "https://localhost:7030";
+    //options.SaveToken = true;
+    //options.Configuration = new OpenIdConnectConfiguration();
+    //options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    //{
+    //    ValidateIssuer = false,
+    //    ValidateAudience = false,
+    //    ValidateLifetime = true,
+    //    ValidateIssuerSigningKey = true,
+    //    ValidIssuer = authority,
+    //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("SigningKey").Value))
+    //};
 });
 
 
