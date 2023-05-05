@@ -19,6 +19,7 @@ import { AuthModule } from '@auth0/auth0-angular';
 import config from 'capacitor.config';
 import { environment } from 'src/environments/environment';
 import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
+import { authInfo } from './authinfo';
 
 //const redirectUri = 'com.iter-meum://dev-2mb38pu2.us.auth0.com/capacitor/com.iter-meum/callback';
 export function tokenGetter(){
@@ -26,9 +27,7 @@ export function tokenGetter(){
 }
 
 // Build the URL that Auth0 should redirect back to
-export const authCallbackUri = isPlatform('capacitor') ? `${config.appId}://dev-2mb38pu2.us.auth0.com/capacitor/${config.appId}/${environment.clientRoot}auth-callback`
-                                : environment.clientRoot;
-console.log('redirect_uri== ', authCallbackUri);
+console.log('redirect_uri== ', authInfo.authCallback);
 
 @NgModule({
   declarations: [AppComponent,SigninCallbackComponent, SignoutCallbackComponent, AuthCallbackComponent],
@@ -48,12 +47,12 @@ console.log('redirect_uri== ', authCallbackUri);
       }
     }),
     AuthModule.forRoot({
-      domain: "dev-2mb38pu2.us.auth0.com",
-      clientId: "qIz5NRX97DPzPwobltrLgy8U6nZTDW9w",
-      useRefreshTokens: true,
-      useRefreshTokensFallback: false,
+      domain: authInfo.domain,
+      clientId: authInfo.clientId,
+      useRefreshTokens: authInfo.useRefreshTokens,
+      useRefreshTokensFallback: authInfo.useRefreshTokensFallback,
       authorizationParams: {
-        authCallbackUri,
+        authCallbackUri: authInfo.authCallback,
       }
     }),
   ],
