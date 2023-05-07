@@ -31,17 +31,23 @@ export class AppComponent {
     private externalAuth: AuthService, private route:ActivatedRoute) {}
 
   clickLogout(){
-      this.auth.logout().subscribe(resp =>{
-        this.router.navigate(["authenticate"]);
-      });
+    this.externalAuth.logout();
+      // this.auth.logout().subscribe(resp =>{
+      //   this.router.navigate(["authenticate"]);
+      // });
   }
 
   ngOnInit():void {
      // Use Capacitor's App plugin to subscribe to the `appUrlOpen` event
-    //  this.externalAuth.isAuthenticated$.subscribe(isAuthenticated =>{
-    //     console.log('is authenticated == ', isAuthenticated);
-
-    //  });
+     this.externalAuth.isAuthenticated$.subscribe(isAuthenticated =>{
+        console.log('is authenticated == ', isAuthenticated);
+        if(isAuthenticated){
+          this.externalAuth.getAccessTokenSilently().subscribe(token => {
+            localStorage.setItem('accessToken', token);
+            console.log('token obtained!!');
+          })
+        }
+     });
 
     if(!isPlatform('capacitor')){
       App.addListener('appUrlOpen', ({ url }) => {

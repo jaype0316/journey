@@ -15,7 +15,7 @@ import { HttpErrorInterceptorService } from './services/http-error-interceptor.s
 import { CommonService } from './services/common.service';
 import { SigninCallbackComponent } from './signin-callback/signin-callback.component';
 import { SignoutCallbackComponent } from './signout-callback/signout-callback.component';
-import { AuthModule } from '@auth0/auth0-angular';
+import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import config from 'capacitor.config';
 import { environment } from 'src/environments/environment';
 import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
@@ -39,20 +39,33 @@ console.log('redirect_uri== ', authInfo.authCallback);
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    JwtModule.forRoot({
-      config:{
-        tokenGetter: tokenGetter,
-        allowedDomains: ["https://localhost:7030", "http://localhost:8100", "https://iter-meum-api.azurewebsites.net"],
-        disallowedRoutes:[]
-      }
-    }),
+    // JwtModule.forRoot({
+    //   config:{
+    //     tokenGetter: tokenGetter,
+    //     allowedDomains: ["https://localhost:7030", "http://localhost:8100", "https://iter-meum-api.azurewebsites.net"],
+    //     disallowedRoutes:[]
+    //   }
+    // }),
     AuthModule.forRoot({
       domain: authInfo.domain,
       clientId: authInfo.clientId,
+      audience: authInfo.audience,
       useRefreshTokens: authInfo.useRefreshTokens,
       useRefreshTokensFallback: authInfo.useRefreshTokensFallback,
       authorizationParams: {
-        authCallbackUri: authInfo.authCallback,
+        authCallbackUri: authInfo.authCallback
+      },
+      httpInterceptor:{
+        allowedList: [
+          {
+            uri: '*',
+            tokenOptions:{
+              // The attached token should target this audience
+              audience: authInfo.audience //'https://dev-2mb38pu2.us.auth0.com/api/v2/'
+            }
+          }
+
+        ],
       }
     }),
   ],
@@ -61,7 +74,7 @@ console.log('redirect_uri== ', authInfo.authCallback);
     CommonService,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptorService,
+      useClass: AuthHttpInterceptor,
       multi: true
     },
     {

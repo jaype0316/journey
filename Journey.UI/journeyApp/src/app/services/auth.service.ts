@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { map, shareReplay } from 'rxjs/operators';
 import { StorageService } from './storage.service';
-import { JwtHelperService } from '@auth0/angular-jwt';
+//import { JwtHelperService } from '@auth0/angular-jwt';
 import { of } from 'rxjs';
 
 @Injectable({
@@ -11,7 +11,7 @@ import { of } from 'rxjs';
 })
 export class AuthenticationService {
 
-  constructor(private http: HttpClient, private storage:StorageService, private jwtHelper:JwtHelperService) { }
+  constructor(private http: HttpClient, private storage:StorageService){} //private jwtHelper:JwtHelperService) { }
 
   login(email:string, password:string){
     return this.http.post(environment.journeyApi + 'Account/Login', {email, password})
@@ -46,11 +46,12 @@ export class AuthenticationService {
   }
 
   isAuthenticated(){
-    const token = this.storage.get("jwt_token");
-    if(token && !this.jwtHelper.isTokenExpired(token)){
-      return true;
-    }
-    return false;
+    // const token = this.storage.get("jwt_token");
+    // if(token && !this.jwtHelper.isTokenExpired(token)){
+    //   return true;
+    // }
+    // return false;
+    return true;
   }
 
   isLoggedIn() {

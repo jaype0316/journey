@@ -79,7 +79,9 @@ export class AuthenticatePage implements OnInit {
     //   }
     // })
     // .subscribe();
-     this.externalAuth.loginWithRedirect();
+     this.externalAuth.loginWithRedirect().subscribe(resp => {
+        console.log('external login callback');
+     });
   }
 
   externalLogout(){

@@ -8,9 +8,10 @@ export const authInfo  = {
     domain: "dev-2mb38pu2.us.auth0.com",
     clientId: "qIz5NRX97DPzPwobltrLgy8U6nZTDW9w",
     useRefreshTokens: true,
+    audience: 'iter-meum-api',
     useRefreshTokensFallback: false,
     authCallback:authCallback ,
     authorizationParams: {
-      authCallbackUri: authCallback,
+      authCallbackUri: authCallback
     }
 }
