@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Journey.Core.Models
 {
-    public class UserContext
+    public class UserContext : IUserContext
     {
-        public string UserId { get; set; }
+        public string Email { get;  set; }
+        public string UserId { get;  set; }
+
     }
 }

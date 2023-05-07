@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Journey.Core.Models;
 using Journey.Core.Providers;
 using Journey.Core.Repository;
 using Journey.Core.Services.Books;
@@ -33,7 +34,8 @@ namespace Journey.Core.Services.Chapters
         private readonly IEntityKeyProvider _entityKeyProvider;
         private readonly IMediator _mediator;
 
-        public SaveCommandHandler(IRepository repository, IMapper mapper, IEntityKeyProvider entityKeyProvider, IMediator mediator)
+        public SaveCommandHandler(IRepository repository, IMapper mapper, IEntityKeyProvider entityKeyProvider, 
+            IMediator mediator)
         {
             this._repository = repository;
             this._mapper = mapper;
@@ -54,7 +56,7 @@ namespace Journey.Core.Services.Chapters
 
             if (string.IsNullOrEmpty(request.Pk))
             {
-                chapter.Pk = _entityKeyProvider.Provide(new Models.UserContext() { UserId = request.UserId });
+                chapter.Pk = _entityKeyProvider.Provide(UserContextCache.Get(request.UserId));
                 await _repository.CreateAsync(chapter);
             }
             else

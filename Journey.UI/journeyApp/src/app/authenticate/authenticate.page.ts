@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ToastController, isPlatform } from '@ionic/angular';
 import { NotificationService } from '../services/notification.service';
 import { AuthService } from '@auth0/auth0-angular';
 import { Browser } from '@capacitor/browser';
@@ -24,9 +24,9 @@ export class AuthenticatePage implements OnInit {
     password:new FormControl('',[ Validators.required, Validators.minLength(6)])
   });
 
-  constructor(private http:HttpClient, private authService: AuthenticationService, 
+  constructor(private http:HttpClient, private auth: AuthService, 
               private router:Router, private toast: ToastController, private route: ActivatedRoute,
-              private notifications: NotificationService, private externalAuth: AuthService) { }
+              private notifications: NotificationService) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -36,12 +36,12 @@ export class AuthenticatePage implements OnInit {
   }
 
   ionViewDidEnter(){
-    this.externalAuth.isAuthenticated$.subscribe(isAuthenticated => {
-      console.log('is authenticated from authenticate component == ', isAuthenticated)
-      if(isAuthenticated){
-        this.router.navigate(['/tabs/home']);
-      }
-    });
+    // this.externalAuth.isAuthenticated$.subscribe(isAuthenticated => {
+    //   console.log('is authenticated from authenticate component == ', isAuthenticated)
+    //   if(isAuthenticated){
+    //     this.router.navigate(['/tabs/home']);
+    //   }
+    // });
   }
 
   get email() {
@@ -51,41 +51,58 @@ export class AuthenticatePage implements OnInit {
     return this.loginForm.get('password');
   }
 
-  onClickLogin(){
-    this.isBusy = true;
+  // onClickLogin(){
+  //   this.isBusy = true;
 
-    if(!this.loginForm.valid)
-      return;    
+  //   if(!this.loginForm.valid)
+  //     return;    
     
-    this.authService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe(success => {
-      console.log('auth response == ', success);
-      if(success){
-        this.notifications.initPush();
-        this.router.navigate(['/tabs/home']);
+  //   this.authService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe(success => {
+  //     console.log('auth response == ', success);
+  //     if(success){
+  //       this.notifications.initPush();
+  //       this.router.navigate(['/tabs/home']);
+  //     }
+  //     }, error => {
+  //       console.log('error from authenticate componnet == ', error);
+  //       this.showToast((<Array<string>>error.authFailures).join());
+  //       this.isBusy = false;
+  //     }, () => {
+  //       this.isBusy = false;
+  //     });
+  // }
+
+  clickLogin(){
+   
+    if(!this.auth.isAuthenticated$){
+      if(isPlatform('capacitor')){
+       this.loginAsCapacitor();
+      } else {
+       this.loginAsWebApp();
       }
-      }, error => {
-        console.log('error from authenticate componnet == ', error);
-        this.showToast((<Array<string>>error.authFailures).join());
-        this.isBusy = false;
-      }, () => {
-        this.isBusy = false;
-      });
+     } else {
+       this.router.navigate(['tabs/home']);
+     }
   }
 
-  externalLogin(){
-    // this.externalAuth.loginWithRedirect({
-    //   async openUrl(url: string) {
-    //     await Browser.open({ url, windowName: '_self' });
-    //   }
-    // })
-    // .subscribe();
-     this.externalAuth.loginWithRedirect().subscribe(resp => {
-        console.log('external login callback');
-     });
+  private loginAsWebApp(){
+    this.auth.loginWithRedirect().subscribe(resp => {
+      this.router.navigate(['tabs/home']);
+    });
+  }
+
+  private loginAsCapacitor(){
+    this.auth
+      .loginWithRedirect({
+        async openUrl(url: string) {
+          await Browser.open({ url, windowName: '_self' });
+        }
+      })
+      .subscribe();
   }
 
   externalLogout(){
-    this.externalAuth.logout();
+    this.auth.logout();
   }
 
   async showToast(message:string){

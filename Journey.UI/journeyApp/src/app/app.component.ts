@@ -11,7 +11,7 @@ import config from 'capacitor.config';
 
 
 // Build the URL that Auth0 should redirect back to
-export const authCallbackUri = isPlatform('capacitor') ? `${config.appId}://dev-2mb38pu2.us.auth0.com/capacitor/${config.appId}/${environment.clientRoot}auth-callback`
+export const authCallbackUri = isPlatform('capacitor') ? `${config.appId}://dev-2mb38pu2.us.auth0.com/capacitor/${config.appId}/callback`
                                 : environment.clientRoot;
 
 @Component({
@@ -22,8 +22,8 @@ export const authCallbackUri = isPlatform('capacitor') ? `${config.appId}://dev-
 export class AppComponent {
   public appPages = [
     { title: 'Profile', url: '/tabs/profile', icon: 'person' },
-    { title: 'About', url: '/tabs/about', icon: 'reader' },
-    { title: 'Logout', url: '', icon: 'exit', onClick: this.clickLogout }
+    { title: 'About', url: '/tabs/about', icon: 'reader' }
+    //{ title: 'Logout', url: '', icon: 'exit', onClick: this.clickLogout }
   ];
   public labels = [{title: 'About', url: '/tabs/about', icon: 'finger-print'}];
 
@@ -32,14 +32,11 @@ export class AppComponent {
 
   clickLogout(){
     this.externalAuth.logout();
-      // this.auth.logout().subscribe(resp =>{
-      //   this.router.navigate(["authenticate"]);
-      // });
   }
 
   ngOnInit():void {
      // Use Capacitor's App plugin to subscribe to the `appUrlOpen` event
-     this.externalAuth.isAuthenticated$.subscribe(isAuthenticated =>{
+     this.externalAuth.isAuthenticated$.subscribe(isAuthenticated => {
         console.log('is authenticated == ', isAuthenticated);
         if(isAuthenticated){
           this.externalAuth.getAccessTokenSilently().subscribe(token => {

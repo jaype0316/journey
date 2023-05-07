@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-auth-callback',
@@ -7,8 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AuthCallbackComponent implements OnInit {
 
-  constructor() { }
+  constructor(private auth: AuthService, private router:Router) { }
 
-  ngOnInit() {}
-
+  ngOnInit() {
+    if(!this.auth.isAuthenticated$){
+      this.auth.loginWithRedirect().subscribe(resp => {
+       this.router.navigate(['tabs/home']);
+     });
+    } else {
+      this.router.navigate(['tabs/home']);
+    }
+  }
 }

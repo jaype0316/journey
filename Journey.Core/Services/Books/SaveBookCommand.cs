@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Journey.Core.Models;
 using Journey.Core.Providers;
 using Journey.Core.Repository;
 using Journey.Core.Utilities;
@@ -38,7 +39,8 @@ namespace Journey.Core.Services.Books
         private readonly IEntityKeyProvider _entityKeyProvider;
         private readonly ICacheProvider _cacheProvider;
 
-        public SaveBookCommandHandler(IRepository repository, IMapper mapper, IEntityKeyProvider entityKeyProvider, ICacheProvider cacheProvider)
+        public SaveBookCommandHandler(IRepository repository, IMapper mapper, IEntityKeyProvider entityKeyProvider, 
+            ICacheProvider cacheProvider)
         {
             this._entityKeyProvider = entityKeyProvider;
             this._repository = repository;
@@ -50,7 +52,7 @@ namespace Journey.Core.Services.Books
             var book = _mapper.Map<Book>(request);
             if (string.IsNullOrEmpty(request.Pk))
             {
-                book.Pk = _entityKeyProvider.Provide(new Models.UserContext() { UserId = request.UserId });
+                book.Pk = _entityKeyProvider.Provide(UserContextCache.Get(request.UserId));
                 book.CreatedAt = book.CreatedAt ?? DateTime.UtcNow;
                 await _repository.CreateAsync<Book>(book);
             } else

@@ -8,6 +8,8 @@ using Journey.Api.Auth;
 using Journey.Api.Middleware;
 using Journey.Api.Models;
 using Journey.Api.Settings;
+using Journey.Core;
+using Journey.Core.Models;
 using Journey.Core.Providers;
 using Journey.Core.Repository;
 using Journey.Core.Services.Blobs;
@@ -75,8 +77,7 @@ builder.Services.AddSingleton<ICacheProvider, CacheProvider>();
 builder.Services.AddHttpClient();
 builder.Services.Configure<Journey.Core.Services.Quote.ApiNinja.ApiNinjaSettings>(builder.Configuration.GetSection("ApiNinjaSettings"));
 builder.Services.Configure<Journey.Core.Services.Communication.SendGrid.SendGridSettings>(builder.Configuration.GetSection("SendGridSettings"));
-
-builder.Services.Configure<DatabaseSettings>(config.GetSection(DatabaseSettings.KeyName));
+builder.Services.Configure<Journey.Core.DatabaseSettings>(config.GetSection(Journey.Core.DatabaseSettings.KeyName));
 builder.Services.AddScoped<IRepository, Journey.Repository.DynamoDb.Repository>();
 builder.Services.AddScoped<IReadRepository, InMemoryRepository>();
 builder.Services.AddSingleton<IAmazonS3, AmazonS3Client>(c =>
@@ -164,6 +165,7 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseMiddleware<OAuthMiddleware>();
 
 app.Run();
 

@@ -10,13 +10,25 @@
 <ion-content class="auth-form">
 
   <ion-card>
+    <img src="./assets/journal1.png">
     <ion-card-header>
       <ion-card-title></ion-card-title>
-      <ion-card-subtitle>Login to your account</ion-card-subtitle>
+      <ion-card-subtitle>Lets get started</ion-card-subtitle>
     </ion-card-header>
   
     <ion-card-content>
-      <form [formGroup]="loginForm" (ngSubmit)="onClickLogin()">
+      <ion-grid>
+        <ion-row>
+          
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button [disabled]="isBusy" (click)="clickLogin()">Login <ion-spinner *ngIf="isBusy"></ion-spinner></ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <!-- <form [formGroup]="loginForm" (ngSubmit)="onClickLogin()">
         <ion-list>
           <ion-item>
             <ion-label for="email">Email:</ion-label>
@@ -75,7 +87,7 @@
             <ion-label style="color:white">Please confirm your account by clicking the link in the email sent.</ion-label>
           </ion-col>
         </ion-row>
-      </ion-grid>
+      </ion-grid> -->
             
     </ion-card-content>   
   </ion-card>
