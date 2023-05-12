@@ -11,6 +11,9 @@ export const environment = {
     domain: "dev-2mb38pu2.us.auth0.com",
     clientId: "XaJDsh1K9YUMMBTDE0UFtQLYAj86v6nN",
     redirectUri: window.location.origin
+  },
+  recaptcha:{
+    siteKey: "6LcpIQEmAAAAAEOKGPM2SHNlJgcDDcQWZcAmsFMk"
   }
 };
 

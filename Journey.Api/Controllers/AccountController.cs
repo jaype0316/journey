@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SendGrid;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -37,13 +38,14 @@ namespace Journey.Api.Controllers
         readonly SignInManager<AppUser> _signInManager;
         readonly ICacheProvider _cacheProvider;
         readonly IEmailSender _emailSender;
+        readonly IHttpClientFactory _httpClientFactory;
         private readonly IApiAuthenticationTokenProvider _tokenProvider;
 
 
         public AccountController(IMediator mediator, IBlobStorageService blobStorage, IBlobKeyProvider keyProvider, 
                                 IMapper mapper, IConfiguration config, UserManager<AppUser> userManager, 
                                 SignInManager<AppUser> signInManager, IApiAuthenticationTokenProvider tokenProvider, 
-                                ICacheProvider cacheProvider, IEmailSender emailSender) :base(mediator, mapper)
+                                ICacheProvider cacheProvider, IEmailSender emailSender, IHttpClientFactory httpClientFactory) :base(mediator, mapper)
         {
             this._blobStorage = blobStorage;
             this._blobObjectKeyProvider = keyProvider;
@@ -53,6 +55,7 @@ namespace Journey.Api.Controllers
             this._tokenProvider = tokenProvider;
             this._cacheProvider = cacheProvider;
             this._emailSender = emailSender;
+            this._httpClientFactory = httpClientFactory;
         }
 
 
@@ -72,6 +75,13 @@ namespace Journey.Api.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var isVerified = await this.VerifyCaptcha(user.CaptchaToken);
+            if (!isVerified)
+            {
+                ModelState.AddModelError("captcha", "Sorry, we could not verify your registration");
+                return BadRequest(ModelState);
+            }
+                
             var existingUser = await _userManager.FindByEmailAsync(user.Email);
             if(existingUser != null)
             {
@@ -82,20 +92,21 @@ namespace Journey.Api.Controllers
             var appUser = new AppUser()
             {
                 UserName = user.Email,
-                Email = user.Email
+                Email = user.Email,
+                EmailConfirmed = true
             };
 
             var result = await _userManager.CreateAsync(appUser, user.Password);
             if (result.Succeeded)
             {
-                var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
-                var confirmationLink = Url.Action("ConfirmEmail", "Account", new { confirmationToken, Email = appUser.Email }, protocol:HttpContext.Request.Scheme);
-                //todo: move this to its own service
-                var htmlContent = $"<p>Confirm your account by clicking: <a href=\"{confirmationLink}\">here</a></p>";
-                var plainContent = $"Confirm your account!!: {confirmationLink}";
-                
-                await _emailSender.SendEmailAsync(appUser.Email, "Account Confirmation", plainContent, htmlContent);
+                //var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
+                //var confirmationLink = Url.Action("ConfirmEmail", "Account", new { confirmationToken, Email = appUser.Email }, protocol:HttpContext.Request.Scheme);
+                ////todo: move this to its own service
+                //var htmlContent = $"<p>Confirm your account by clicking: <a href=\"{confirmationLink}\">here</a></p>";
+                //var plainContent = $"Confirm your account!!: {confirmationLink}";
 
+                //await _emailSender.SendEmailAsync(appUser.Email, "Account Confirmation", plainContent, htmlContent);
+                //var result = await _userManager.ConfirmEmailAsync(user, confirmationToken);
                 return Ok(result);
             }
             else
@@ -105,6 +116,22 @@ namespace Journey.Api.Controllers
             }
 
             return Ok(ModelState);
+        }
+
+        private async Task<bool> VerifyCaptcha(string token)
+        {
+            var secret = "6LcpIQEmAAAAAOlHy6y2MTxgNMuim99_9dSUYSSS";
+            var client = this._httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri("https://www.google.com/");
+            var response = await client.PostAsJsonAsync($"recaptcha/api/siteverify?secret={secret}&response={token}", new
+            {
+                Secret = secret,
+                Response = token
+            });
+
+            response.EnsureSuccessStatusCode();
+            var verification = await response.Content.ReadAsAsync<CaptchaVerification>();
+            return verification.Success && verification.Score > 0.4;
         }
 
         [HttpGet, Route("ConfirmEmail")]

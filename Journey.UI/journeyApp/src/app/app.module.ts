@@ -13,6 +13,8 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { JwtModule } from '@auth0/angular-jwt';
 import { HttpErrorInterceptorService } from './services/http-error-interceptor.service';
 import { CommonService } from './services/common.service';
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from "ng-recaptcha";
+import { environment } from 'src/environments/environment';
 
 //const redirectUri = 'com.iter-meum://dev-2mb38pu2.us.auth0.com/capacitor/com.iter-meum/callback';
 export function tokenGetter(){
@@ -29,6 +31,7 @@ export function tokenGetter(){
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    RecaptchaV3Module,
     JwtModule.forRoot({
       config:{
         tokenGetter: tokenGetter,
@@ -49,6 +52,10 @@ export function tokenGetter(){
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptorService,
       multi:true
+    },
+    {
+      provide: RECAPTCHA_V3_SITE_KEY, 
+      useValue: environment.recaptcha.siteKey
     }
   ]
 })
