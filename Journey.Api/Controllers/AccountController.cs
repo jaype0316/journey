@@ -237,7 +237,7 @@ namespace Journey.Api.Controllers
             //Seed an initial jounral
             var book = await _mediator.Send(new Core.Services.Books.GetBookRequest(user.UserId));
             if(book == null)
-                book = await _mediator.Send(new SaveBookCommand(user.UserId) { Title = "My Journey", About = "What's on your mind...?", UserId = user.UserId });
+                book = await _mediator.Send(new SaveBookCommand(user.UserId) { Title = "Journal", About = "What's on your mind...?", UserId = user.UserId });
 
             //Seed initial tags
             var userTags = await _mediator.Send(new Core.Services.Tags.GetRequest(user.UserId));

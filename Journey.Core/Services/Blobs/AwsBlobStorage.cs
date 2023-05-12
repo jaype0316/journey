@@ -33,7 +33,8 @@ namespace Journey.Core.Services.Blobs
                 var putBucketRequest = new PutBucketRequest()
                 {
                     BucketName = BUCKET_NAME,
-                    UseClientRegion = true
+                    UseClientRegion = true,
+                    CannedACL = S3CannedACL.PublicRead
                 };
                 await _client.PutBucketAsync(putBucketRequest);
             }
