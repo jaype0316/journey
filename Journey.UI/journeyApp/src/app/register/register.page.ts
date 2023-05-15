@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { Register } from '../models/register.model';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Subscription } from 'rxjs';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-register',
@@ -27,7 +28,7 @@ export class RegisterPage implements OnInit {
     captchaToken: new FormControl('')
   }, this.mustMatch('password', 'confirmPassword'));
 
-  constructor(private http:HttpClient, private router:Router, private recaptchaService: ReCaptchaV3Service) { 
+  constructor(private http:HttpClient, private router:Router, private recaptchaService: ReCaptchaV3Service, private toast: ToastController) { 
     this.subscriptions = new Array();
   }
 
@@ -35,10 +36,21 @@ export class RegisterPage implements OnInit {
   
   }
 
+  ionViewDidEnter(){
+    const element = document.getElementsByClassName('grecaptcha-badge')[0] as HTMLElement;
+    if (element) {
+      element.style.visibility = 'visible';
+    }
+  }
+
   ionViewWillLeave(){
     this.registerForm.reset();
     this.errors = [];
     this.subscriptions.forEach(s => s.unsubscribe());
+    const element = document.getElementsByClassName('grecaptcha-badge')[0] as HTMLElement;
+    if (element) {
+      element.style.visibility = 'hidden';
+    }
   }
 
   onSubmitRegistration(){
@@ -62,18 +74,22 @@ export class RegisterPage implements OnInit {
     this.isBusy = true; 
     this.registerForm.get('captchaToken').setValue(token);
     console.log('register form == ', this.registerForm.getRawValue());
-    let registerPromise = this.http.post(environment.journeyApi + 'Account/Register', this.registerForm.value).subscribe(() =>{
+    let registerPromise = this.http.post(environment.journeyApi + 'Account/Register', this.registerForm.value).subscribe((response:any) =>{
       this.isBusy = false;
-      this.router.navigate(['/authenticate'],
-                          { queryParams: { fromRegistration: true }});
+      if(response.authFailures){
+        this.errors = response.authFailures.join();
+        return;
+      }
+      this.router.navigate(['/authenticate']);
     }, errorResponse => {
-        this.errors = errorResponse.errors;
+        this.errors = errorResponse.errors || errorResponse.authFailures;
         this.isBusy = false;
         console.log('errors == ', this.errors);
     });  
 
     this.subscriptions.push(registerPromise);
   }
+
 
   get email() {
     return this.registerForm.get('email');

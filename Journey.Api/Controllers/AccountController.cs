@@ -112,7 +112,9 @@ namespace Journey.Api.Controllers
             else
             {
                 foreach (var error in result.Errors)
-                    ModelState.AddModelError("", error.Description);
+                    ModelState.AddModelError("authFailures", error.Description);
+
+                return BadRequest(ModelState);
             }
 
             return Ok(ModelState);
